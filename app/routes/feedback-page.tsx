@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { Route } from './+types/feedback-page';
-import { Inbox, MessageSquare, Send } from 'lucide-react';
+import { Inbox, MessageSquare, Send, type LucideProps } from 'lucide-react';
 import SendFeedback from '~/components/send-feedback';
 import FeedbackList from '~/components/feedback-list';
 import Header from '~/components/header';
@@ -33,35 +33,57 @@ export default function FeedbackPage() {
         {
             id: '1',
             from: 'Alice Johnson',
-            to: 'You',
+            to: 'Você',
             message:
-                'Great job on the project presentation! Your attention to detail really showed.',
-            category: 'positive',
+                'Excelente trabalho na apresentação do projeto! Sua atenção aos detalhes ficou evidente.',
+            category: 'positivo',
             isAnonymous: false,
             timestamp: new Date('2024-06-20T10:30:00'),
-            type: 'received',
+            type: 'recebido',
         },
         {
             id: '2',
-            from: 'Anonymous',
-            to: 'You',
+            from: 'Anônimo',
+            to: 'Você',
             message:
-                'Consider being more concise in meetings. Your points are valuable but could be delivered more efficiently.',
-            category: 'constructive',
+                'Seria interessante revisar os prazos antes de enviar a próxima versão.',
+            category: 'construtivo',
             isAnonymous: true,
-            timestamp: new Date('2024-06-19T14:15:00'),
-            type: 'received',
+            timestamp: new Date('2024-06-21T14:45:00'),
+            type: 'recebido',
         },
         {
             id: '3',
-            from: 'You',
-            to: 'Bob Smith',
+            from: 'Você',
+            to: 'Carlos Mendes',
             message:
-                'Your collaboration skills have really improved this quarter. Keep up the great work!',
-            category: 'positive',
+                'Gostei muito da sua postura na reunião. Passou segurança e domínio do assunto.',
+            category: 'positivo',
             isAnonymous: false,
-            timestamp: new Date('2024-06-18T16:45:00'),
-            type: 'sent',
+            timestamp: new Date('2024-06-22T09:20:00'),
+            type: 'enviado',
+        },
+        {
+            id: '4',
+            from: 'Você',
+            to: 'Equipe Atlas',
+            message:
+                'A comunicação poderia ser mais clara nas atualizações do projeto.',
+            category: 'construtivo',
+            isAnonymous: true,
+            timestamp: new Date('2024-06-23T16:10:00'),
+            type: 'enviado',
+        },
+        {
+            id: '5',
+            from: 'Bruna Lima',
+            to: 'Você',
+            message:
+                'Obrigado por ajudar com o deploy, foi essencial para entregarmos no prazo!',
+            category: 'positivo',
+            isAnonymous: false,
+            timestamp: new Date('2024-06-24T11:05:00'),
+            type: 'recebido',
         },
     ];
 
@@ -88,31 +110,20 @@ export default function FeedbackPage() {
     }, []);
 
     return (
-        <div className={`relative bg-(--background) pb-5 ${theme}`}>
+        <div
+            className={`relative min-h-screen bg-(--background) pb-5 ${theme}`}
+        >
             <Header theme={theme} handleTheme={handleTheme} />
-            <div className="pt-25">
-                <div className="h-full max-w-2xl mx-auto rounded-md border border-(--border-color) shadow-md">
-                    <div className="grid grid-cols-3">
-                        {tabs.map((item, index) => {
-                            const Icon = item.icon;
-                            return (
-                                <button
-                                    className={`flex gap-2 items-center justify-center text-base py-4 cursor-pointer ${
-                                        tab === item.id
-                                            ? 'border-b-2 border-[#8470ff] text-[#8470ff] font-bold bg-[#8470ff]/20'
-                                            : 'text-(--paragraph) border-b-2 border-(--border-color) hover:bg-[#8470ff]/5'
-                                    }`}
-                                    onClick={() => setTab(item.id)}
-                                    key={index}
-                                >
-                                    <Icon className="size-5" />
-                                    <span>{item.label}</span>
-                                </button>
-                            );
-                        })}
-                    </div>
+            <div className="md:pt-25 pt-16 pb-5">
+                <div className="h-full max-w-2xl mx-auto rounded-md md:border border-(--border-color) shadow-md">
+                    <NagivationTab
+                        tabs={tabs}
+                        tab={tab}
+                        handleChangeTab={setTab}
+                        className="md:grid grid-cols-3 hidden"
+                    />
 
-                    <div className="py-10 px-20">
+                    <div className="py-10 md:px-20 px-5">
                         {tab === 'send' && <SendFeedback />}
                         {tab === 'received' && (
                             <FeedbackList
@@ -131,6 +142,68 @@ export default function FeedbackPage() {
                     </div>
                 </div>
             </div>
+
+            <NagivationTab
+                tabs={tabs}
+                tab={tab}
+                handleChangeTab={setTab}
+                className="grid grid-cols-3 w-full fixed bottom-0 md:hidden"
+                type="mobile"
+            />
+        </div>
+    );
+}
+
+interface NagivationTabProps {
+    tabs: {
+        id: string;
+        label: string;
+        icon: React.ForwardRefExoticComponent<Omit<LucideProps, 'ref'>>;
+    }[];
+
+    tab: string;
+    handleChangeTab: (id: string) => void;
+    className?: string;
+    type?: 'default' | 'mobile';
+}
+export function NagivationTab({
+    tabs,
+    tab,
+    handleChangeTab,
+    className,
+    type = 'default',
+}: NagivationTabProps) {
+    return (
+        <div className={`bg-(--background) ${className}`}>
+            {tabs.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                    <button
+                        className={`flex flex-col md:flex-row gap-1 md:gap-2 items-center justify-center py-2 md:py-4 cursor-pointer text-sm md:text-base md:border-t-0 ${
+                            tab === item.id
+                                ? 'border-t-2 md:border-b-2 border-[#8470ff] text-[#8470ff] font-bold bg-[#8470ff]/20'
+                                : 'text-(--paragraph) border-t-2 md:border-b-2 border-(--border-color) hover:bg-[#8470ff]/5'
+                        }`}
+                        onClick={() => handleChangeTab(item.id)}
+                        key={index}
+                    >
+                        <Icon className="size-5" />
+                        <span>
+                            {type === 'mobile'
+                                ? item.label
+                                      .split(' ')
+                                      .filter(
+                                          (word) =>
+                                              !word
+                                                  .toLowerCase()
+                                                  .startsWith('feedback')
+                                      )
+                                      .join(' ')
+                                : item.label}
+                        </span>
+                    </button>
+                );
+            })}
         </div>
     );
 }

@@ -13,23 +13,37 @@ export default function SendFeedback() {
 
     const categories = [
         {
-            value: 'positive',
-            label: 'Positive Feedback',
+            value: 'positivo',
+            label: 'Feedback Positivo',
             icon: '👏',
             color: 'text-green-600',
         },
         {
-            value: 'constructive',
-            label: 'Constructive Feedback',
+            value: 'construtivo',
+            label: 'Feedback Construtivo',
             icon: '💡',
             color: 'text-yellow-600',
         },
         {
-            value: 'general',
-            label: 'General Feedback',
+            value: 'geral',
+            label: 'Feedback Geral',
             icon: '💬',
             color: 'text-blue-600',
         },
+    ];
+
+    const squads = [
+        { value: 'atlas', label: 'Atlas Squad' },
+        { value: 'nimbus', label: 'Nimbus Squad' },
+        { value: 'aurora', label: 'Aurora Squad' },
+        { value: 'odin', label: 'Odin Squad' },
+        { value: 'zeus', label: 'Zeus Squad' },
+        { value: 'phoenix', label: 'Phoenix Squad' },
+        { value: 'kratos', label: 'Kratos Squad' },
+        { value: 'argo', label: 'Argo Squad' },
+        { value: 'lyra', label: 'Lyra Squad' },
+        { value: 'sirius', label: 'Sirius Squad' },
+        { value: 'gaia', label: 'Gaia Squad' },
     ];
 
     const [formData, setFormData] = useState({
@@ -51,12 +65,22 @@ export default function SendFeedback() {
                 </p>
             </div>
             <form className="flex flex-col gap-5">
-                <SelectWithLabel
-                    options={teamMembers}
-                    id="sendFeedbackTo"
-                    title="Enviar para"
-                    placeholder="Selecione um membro"
-                />
+                <div className="grid grid-cols-2 gap-5">
+                    <SelectWithLabel
+                        options={squads}
+                        id="sendFeedbackTo"
+                        title="Squads da empresa"
+                        placeholder="Selecione um squad"
+                        value="gaia"
+                    />
+                    <SelectWithLabel
+                        options={teamMembers}
+                        id="sendFeedbackTo"
+                        title="Enviar para"
+                        placeholder="Selecione um membro"
+                    />
+                </div>
+
                 <SelectWithLabel
                     options={categories}
                     id="feedbackCategory"
@@ -74,7 +98,7 @@ export default function SendFeedback() {
                     <textarea
                         name="feedback"
                         id="feedback"
-                        placeholder="Escreva seu feedback de maneira educada e repeitosa..."
+                        placeholder="Escreva seu feedback aqui..."
                         className="block w-full rounded-md px-3 py-1.5 text-base text-(--headline) outline-0 border-2 border-(--border-color) focus:border-[#8470ff] placeholder:text-(--paragraph) sm:text-sm/6 my-1 h-20"
                         maxLength={500}
                         value={formData.message}
