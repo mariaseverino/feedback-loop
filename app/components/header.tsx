@@ -1,30 +1,35 @@
 import { LogOut, Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-export default function Header() {
-    const [theme, setTheme] = useState('dark');
+interface HeaderProps {
+    theme: string;
+    handleTheme: () => void;
+}
 
-    function handleTheme() {
-        setTheme((prevTheme) => {
-            const newTheme = prevTheme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            return newTheme;
-        });
-    }
+export default function Header({ theme, handleTheme }: HeaderProps) {
+    // const [theme, setTheme] = useState('dark');
 
-    useEffect(() => {
-        function getThemeFromStorage() {
-            const storedTheme = localStorage.getItem('theme');
-            if (storedTheme) {
-                setTheme(storedTheme);
-            }
-        }
+    // function handleTheme() {
+    //     setTheme((prevTheme) => {
+    //         const newTheme = prevTheme === 'dark' ? 'light' : 'dark';
+    //         localStorage.setItem('theme', newTheme);
+    //         return newTheme;
+    //     });
+    // }
 
-        getThemeFromStorage();
-    }, []);
+    // useEffect(() => {
+    //     function getThemeFromStorage() {
+    //         const storedTheme = localStorage.getItem('theme');
+    //         if (storedTheme) {
+    //             setTheme(storedTheme);
+    //         }
+    //     }
+
+    //     getThemeFromStorage();
+    // }, []);
 
     return (
-        <header className="bg-[#eceaff] fixed w-screen">
+        <header className="bg-(--card-color) fixed w-screen">
             <nav
                 className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
                 aria-label="Global"
@@ -43,7 +48,7 @@ export default function Header() {
                 <div className="flex items-center gap-5">
                     <button
                         onClick={handleTheme}
-                        className="rounded-full bg-[#8470ff] text-[#f5f4ff] shadow-md hover:scale-105 transition-transform cursor-pointer p-2"
+                        className="rounded-full bg-[#8470ff] text-(--headline) shadow-md hover:scale-105 transition-transform cursor-pointer p-2"
                         aria-label="Alternar tema"
                     >
                         {theme === 'dark' ? (

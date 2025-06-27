@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Route } from './+types/feedback-page';
 import { Inbox, MessageSquare, Send } from 'lucide-react';
 import SendFeedback from '~/components/send-feedback';
@@ -66,13 +66,33 @@ export default function FeedbackPage() {
     ];
 
     const [tab, setTab] = useState('send');
+    const [theme, setTheme] = useState('dark');
+
+    function handleTheme() {
+        setTheme((prevTheme) => {
+            const newTheme = prevTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            return newTheme;
+        });
+    }
+
+    useEffect(() => {
+        function getThemeFromStorage() {
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme) {
+                setTheme(storedTheme);
+            }
+        }
+
+        getThemeFromStorage();
+    }, []);
 
     return (
-        <div className="relative">
-            <Header />
+        <div className={`relative bg-(--background) pb-5 ${theme}`}>
+            <Header theme={theme} handleTheme={handleTheme} />
             <div className="pt-25">
-                <div className="h-full max-w-2xl mx-auto rounded-md border border-gray-200 shadow-md mb-5">
-                    <div className="grid grid-cols-3 ">
+                <div className="h-full max-w-2xl mx-auto rounded-md border border-(--border-color) shadow-md">
+                    <div className="grid grid-cols-3">
                         {tabs.map((item, index) => {
                             const Icon = item.icon;
                             return (
@@ -80,13 +100,13 @@ export default function FeedbackPage() {
                                     className={`flex gap-2 items-center justify-center text-base py-4 cursor-pointer ${
                                         tab === item.id
                                             ? 'border-b-2 border-[#8470ff] text-[#8470ff] font-bold bg-[#8470ff]/20'
-                                            : 'text-gray-500 border-b-2 border-gray-200 hover:bg-[#eceaff]/50'
+                                            : 'text-(--paragraph) border-b-2 border-(--border-color) hover:bg-[#8470ff]/5'
                                     }`}
                                     onClick={() => setTab(item.id)}
                                     key={index}
                                 >
                                     <Icon className="size-5" />
-                                    <label>{item.label}</label>
+                                    <span>{item.label}</span>
                                 </button>
                             );
                         })}

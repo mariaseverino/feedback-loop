@@ -42,10 +42,10 @@ export default function SendFeedback() {
     return (
         <div>
             <div className="mb-8">
-                <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+                <h1 className="text-2xl font-semibold text-(--headline) mb-2">
                     Envie um feedback!
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-(--paragraph)">
                     Compartilhe um elogio ou uma dica amiga. O poder tá nas suas
                     mãos 😉
                 </p>
@@ -64,10 +64,10 @@ export default function SendFeedback() {
                     placeholder="Selecione a categoria de feedback"
                 />
 
-                <div className="text-[#45454b] flex flex-col">
+                <div className="flex flex-col">
                     <label
                         htmlFor="feedback"
-                        className="text-[#45454b] text-sm font-medium"
+                        className="text-(--headline) text-sm font-medium"
                     >
                         Seu feedback
                     </label>
@@ -75,7 +75,7 @@ export default function SendFeedback() {
                         name="feedback"
                         id="feedback"
                         placeholder="Escreva seu feedback de maneira educada e repeitosa..."
-                        className="block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 my-1 h-20"
+                        className="block w-full rounded-md px-3 py-1.5 text-base text-(--headline) outline-0 border-2 border-(--border-color) focus:border-[#8470ff] placeholder:text-(--paragraph) sm:text-sm/6 my-1 h-20"
                         maxLength={500}
                         value={formData.message}
                         onChange={(e) =>
@@ -85,12 +85,12 @@ export default function SendFeedback() {
                             })
                         }
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-(--paragraph)">
                         {formData.message.length}/500 characters
                     </p>
                 </div>
 
-                <div className="bg-orange-100 border border-orange-300 p-4 rounded-md flex justify-between items-center">
+                <div className="bg-[#fef4e1] border-2 border-[#f9970c] p-4 rounded-md flex justify-between items-center">
                     <div className="flex gap-2">
                         <input
                             type="checkbox"
@@ -111,7 +111,7 @@ export default function SendFeedback() {
                             </p>
                         </div>
                     </div>
-                    <AlertCircle className="text-orange-500" />
+                    <AlertCircle className="text-[#f9970c]" />
                 </div>
 
                 <button className="bg-[#8470ff] w-full flex items-center justify-center font-medium text-white p-3 rounded-md gap-2 transition-transform duration-150 hover:scale-105">

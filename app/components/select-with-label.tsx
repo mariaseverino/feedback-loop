@@ -22,7 +22,10 @@ export default function SelectWithLabel({
 }: SelectWithLabelProps) {
     return (
         <div>
-            <label htmlFor={id} className="text-[#45454b] text-sm font-medium">
+            <label
+                htmlFor={id}
+                className="text-(--headline) text-sm font-medium"
+            >
                 {title}
             </label>
             <div className="relative">
@@ -30,7 +33,7 @@ export default function SelectWithLabel({
                     name={id}
                     id={id}
                     defaultValue=""
-                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-transparent py-1.5 pr-8 pl-3 text-base text-gray-500 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-[#8470ff] sm:text-sm/6 mt-1 relative z-50"
+                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-transparent py-1.5 pr-8 pl-3 text-base text-(--paragraph) sm:text-sm/6 mt-1 relative z-50 border-2 border-(--border-color) focus:border-[#8470ff] outline-0"
                 >
                     <option value="" disabled>
                         {placeholder}
@@ -44,7 +47,7 @@ export default function SelectWithLabel({
                         </option>
                     ))}
                 </select>
-                <ChevronDown className="absolute top-3 right-2 text-gray-500 size-5" />
+                <ChevronDown className="absolute top-3 right-2 text-(--paragraph) size-5" />
             </div>
         </div>
     );

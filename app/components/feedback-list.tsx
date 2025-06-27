@@ -22,7 +22,9 @@ export default function FeedbackList({
 }: FeedbackListProps) {
     return (
         <div>
-            <h1 className="text-2xl mb-8 font-medium">{title}</h1>
+            <h1 className="text-2xl mb-8 font-medium text-(--headline)">
+                {title}
+            </h1>
 
             <div className="flex flex-col gap-8">
                 {feedbacks.map((feedback, index) => (
@@ -70,8 +72,8 @@ function FeedbackCard({ feedback, isReceivedFeedback }: FeedbackProps) {
     };
     return (
         <div>
-            <div className="flex justify-between mb-2">
-                <div className="flex gap-2">
+            <div className="flex justify-between mb-4">
+                <div className="flex gap-2 text-(--headline)">
                     {feedback.isAnonymous && isReceivedFeedback ? (
                         <Shield className="size-5" />
                     ) : (
@@ -90,11 +92,13 @@ function FeedbackCard({ feedback, isReceivedFeedback }: FeedbackProps) {
                     </div>
                 </div>
                 <div className="flex gap-1 items-center">
-                    <Clock className="size-3.5 text-gray-500" />
-                    <label className="text-gray-500 text-sm">22/05/2013</label>
+                    <Clock className="size-3.5 text-(--paragraph)" />
+                    <label className="text-(--paragraph) text-sm">
+                        22/05/2013
+                    </label>
                 </div>
             </div>
-            <div className="flex rounded-md border-l-5 border-[#8470ff]/50 p-4 gap-3 text-gray-600 bg-[#eceaff]/50">
+            <div className="flex rounded-md border-l-5 border-[#8470ff]/50 p-4 gap-3 text-(--paragraph) bg-(--card-color)/50">
                 <div>
                     <MessageSquare className="size-5 mt-1" />
                 </div>
