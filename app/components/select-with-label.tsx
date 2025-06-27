@@ -1,0 +1,51 @@
+import { ChevronDown } from 'lucide-react';
+
+interface Category {
+    value: string;
+    label: string;
+    icon: string;
+    color: string;
+}
+
+interface SelectWithLabelProps {
+    options: string[] | Category[];
+    title: string;
+    placeholder: string;
+    id: string;
+}
+
+export default function SelectWithLabel({
+    options,
+    title,
+    placeholder,
+    id,
+}: SelectWithLabelProps) {
+    return (
+        <div>
+            <label htmlFor={id} className="text-[#45454b] text-sm font-medium">
+                {title}
+            </label>
+            <div className="relative">
+                <select
+                    name={id}
+                    id={id}
+                    defaultValue=""
+                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-transparent py-1.5 pr-8 pl-3 text-base text-gray-500 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-[#8470ff] sm:text-sm/6 mt-1 relative z-50"
+                >
+                    <option value="" disabled>
+                        {placeholder}
+                    </option>
+                    {options.map((item, index) => (
+                        <option value={index} key={index}>
+                            {typeof item === 'object' &&
+                                'icon' in item &&
+                                item.icon + ' '}
+                            {typeof item === 'string' ? item : item.label}
+                        </option>
+                    ))}
+                </select>
+                <ChevronDown className="absolute top-3 right-2 text-gray-500 size-5" />
+            </div>
+        </div>
+    );
+}
