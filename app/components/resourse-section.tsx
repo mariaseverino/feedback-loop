@@ -51,6 +51,7 @@ export default function ResourseSection() {
             <div className="grid md:grid-cols-2 gap-8 md:gap-10">
                 {resourses.map((resourse, index) => (
                     <div
+                        key={index}
                         className="cursor-pointer shadow-lg rounded-lg overflow-hidden"
                         onClick={() => handleOpenImg(index)}
                     >
