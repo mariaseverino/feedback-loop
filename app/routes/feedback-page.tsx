@@ -74,17 +74,17 @@ export default function FeedbackPage() {
             timestamp: new Date('2024-06-23T16:10:00'),
             type: 'enviado',
         },
-        {
-            id: '5',
-            from: 'Bruna Lima',
-            to: 'Você',
-            message:
-                'Obrigado por ajudar com o deploy, foi essencial para entregarmos no prazo!',
-            category: 'positivo',
-            isAnonymous: false,
-            timestamp: new Date('2024-06-24T11:05:00'),
-            type: 'recebido',
-        },
+        // {
+        //     id: '5',
+        //     from: 'Bruna Lima',
+        //     to: 'Você',
+        //     message:
+        //         'Obrigado por ajudar com o deploy, foi essencial para entregarmos no prazo!',
+        //     category: 'positivo',
+        //     isAnonymous: false,
+        //     timestamp: new Date('2024-06-24T11:05:00'),
+        //     type: 'recebido',
+        // },
     ];
 
     const [tab, setTab] = useState('send');
