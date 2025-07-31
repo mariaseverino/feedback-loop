@@ -98,7 +98,7 @@ function FeedbackCard({ feedback, isReceivedFeedback }: FeedbackProps) {
                     </label>
                 </div>
             </div>
-            <div className="flex rounded-md border-l-5 border-[#8470ff]/50 p-4 gap-3 text-(--paragraph) bg-(--card-color)/50">
+            <div className="flex rounded-md border-l-5 border-(--color-primary)/50 p-4 gap-3 text-(--paragraph) bg-(--card-color)/50">
                 <div>
                     <MessageSquare className="size-5 mt-1" />
                 </div>

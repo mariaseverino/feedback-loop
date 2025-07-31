@@ -99,7 +99,7 @@ export default function SendFeedback() {
                         name="feedback"
                         id="feedback"
                         placeholder="Escreva seu feedback aqui..."
-                        className="block w-full rounded-md px-3 py-1.5 text-base text-(--headline) outline-0 border-2 border-(--border-color) focus:border-[#8470ff] placeholder:text-(--paragraph) sm:text-sm/6 my-1 h-20"
+                        className="block w-full rounded-md px-3 py-1.5 text-base text-(--headline) outline-0 border-2 border-(--border-color) focus:border-(--color-primary) placeholder:text-(--paragraph) sm:text-sm/6 my-1 h-20"
                         maxLength={500}
                         value={formData.message}
                         onChange={(e) =>
@@ -120,7 +120,7 @@ export default function SendFeedback() {
                             type="checkbox"
                             name="sendAnonymously"
                             id="sendAnonymously"
-                            className="h-4 w-4 rounded border-gray-300 text-[#8470ff] focus:ring-[#8470ff] transition mt-1"
+                            className="h-4 w-4 rounded border-gray-300 text-(--color-primary) focus:ring-(--color-primary) transition mt-1"
                         />
                         <div className="flex flex-col">
                             <label
@@ -138,7 +138,7 @@ export default function SendFeedback() {
                     <AlertCircle className="text-[#f9970c]" />
                 </div>
 
-                <button className="bg-[#8470ff] w-full flex items-center justify-center font-medium text-white p-3 rounded-md gap-2 transition-transform duration-150 hover:scale-105">
+                <button className="bg-(--color-primary) w-full flex items-center justify-center font-medium text-white p-3 rounded-md gap-2 transition-transform duration-150 hover:scale-105">
                     <Send />
                     Enviar feedback
                 </button>

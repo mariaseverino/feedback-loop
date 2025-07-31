@@ -2,8 +2,8 @@
 @import 'tailwindcss';
 
 @theme {
-    --font-mono: 'Nunito', sans-serif;
-    --font-sans: 'Public Sans', sans-serif;
+    --font-mono: 'Unbounded', sans-serif;
+    --font-sans: 'Roboto', sans-serif;
 }
 
 html {
@@ -32,6 +32,22 @@ body {
     --paragraph: #2a2a2a;
 
     --card-color: #eceaff;
+
+    --color-primary: #6458ee; /* Roxo vibrante para botões e destaques */
+    --color-primary-ligth: #eceaff; /* Fundo do header */
+    --color-background: #f5f6fa; /* Fundo geral do sistema */
+    --color-surface: #ffffff; /* Cards, caixas, modais */
+
+    /* Texto */
+    --color-text: #2a2a2a; /* Texto principal */
+    --color-muted-text: #6b7280; /* Texto secundário (cinza médio) */
+
+    /* Feedback visual */
+    --color-success: #6ee7b7; /* Verde suave */
+    --color-warning: #fde68a; /* Amarelo suave */
+    --color-error: #fca5a5; /* Vermelho suave */
+
+    /* #e8eae5 */
 }
 
 .dark {

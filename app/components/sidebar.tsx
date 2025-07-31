@@ -45,7 +45,7 @@ export default function Sidebar() {
                             className={({ isActive }) =>
                                 `flex gap-2 p-2 ${
                                     isActive
-                                        ? 'bg-[#8470ff] rounded-full text-[#f5f4ff]'
+                                        ? 'bg-(--color-primary) rounded-full text-[#f5f4ff]'
                                         : ''
                                 }`
                             }
@@ -57,7 +57,9 @@ export default function Sidebar() {
                             to="/settings"
                             className={({ isActive }) =>
                                 `flex gap-2 p-2 ${
-                                    isActive ? 'bg-[#8470ff] rounded-full' : ''
+                                    isActive
+                                        ? 'bg-(--color-primary) rounded-full'
+                                        : ''
                                 }`
                             }
                         >
@@ -68,7 +70,9 @@ export default function Sidebar() {
                             to="/settings"
                             className={({ isActive }) =>
                                 `flex gap-2 p-2 ${
-                                    isActive ? 'bg-[#8470ff] rounded-full' : ''
+                                    isActive
+                                        ? 'bg-(--color-primary) rounded-full'
+                                        : ''
                                 }`
                             }
                         >
@@ -84,7 +88,7 @@ export default function Sidebar() {
                     </div>
                     <button
                         onClick={handleTheme}
-                        className="rounded-full bg-[#8470ff] text-[#f5f4ff] shadow-md hover:scale-105 transition-transform cursor-pointer ml-2 p-2"
+                        className="rounded-full bg-(--color-primary) text-[#f5f4ff] shadow-md hover:scale-105 transition-transform cursor-pointer ml-2 p-2"
                         aria-label="Alternar tema"
                     >
                         {theme === 'dark' ? (
@@ -110,7 +114,7 @@ function NavItem({ icon, title }: NavItemProps) {
             to="/"
             className={({ isActive }) =>
                 `flex gap-2 mb-2 p-2 ${
-                    isActive ? 'bg-[#8470ff] rounded-full' : ''
+                    isActive ? 'bg-(--color-primary) rounded-full' : ''
                 }`
             }
         >

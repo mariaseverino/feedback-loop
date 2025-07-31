@@ -1,10 +1,13 @@
+import { MessagesSquare } from 'lucide-react';
+
 export default function NavBar() {
     return (
         <nav className="w-full pt-3">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
                 {/* Logo ou Nome */}
-                <div className="flex items-center">
-                    <span className="text-xl font-bold text-white">
+                <div className="flex items-center gap-4 text-white">
+                    <MessagesSquare className="size-8" />
+                    <span className="font-bold text-xl md:block hidden">
                         FeedbackLoop
                     </span>
                 </div>
@@ -53,13 +56,13 @@ export default function NavBar() {
                     </a>
                     {/* <a
                         href="/register"
-                        className="bg-white text-[#191654] px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition"
+                        className="bg-white text-(--color-primary) px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition"
                     >
                         Criar conta
                     </a> */}
                     <a
                         href="/signup"
-                        className="rounded-xl bg-white px-4 py-2 text-sm font-bold text-[#191654] hover:bg-white/90 transition-all duration-200"
+                        className="rounded-xl bg-white px-4 py-2 text-sm font-bold text-(--color-primary) hover:bg-white/90 transition-all duration-200 shadow-md"
                     >
                         Criar conta
                     </a>

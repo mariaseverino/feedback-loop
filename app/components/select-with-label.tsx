@@ -39,7 +39,7 @@ export default function SelectWithLabel({
                     name={id}
                     id={id}
                     defaultValue={value}
-                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-(--background) py-1.5 pr-8 pl-3 text-base text-(--paragraph) sm:text-sm/6 mt-1 relative border-2 border-(--border-color) focus:border-[#8470ff] outline-0"
+                    className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-(--background) py-1.5 pr-8 pl-3 text-base text-(--paragraph) sm:text-sm/6 mt-1 relative border-2 border-(--border-color) focus:border-(--color-primary) outline-0"
                 >
                     <option value="" disabled>
                         {placeholder}

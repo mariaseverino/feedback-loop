@@ -46,12 +46,12 @@ interface AccordionProps {
 
 function Accordion({ title, description }: AccordionProps) {
     return (
-        <details className="border-b group border-gray-300 first:border-t">
-            <summary className="flex items-center justify-between cursor-pointer select-none px-4 py-3 font-semibold hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary">
+        <details className="border-b group border-(--color-muted-text)/30 first:border-t">
+            <summary className="flex items-center justify-between cursor-pointer select-none px-4 py-3 font-semibold hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary text-(--color-text)">
                 <span>{title}</span>
-                <ChevronDown className="text-gray-400 transition-transform group-open:rotate-180" />
+                <ChevronDown className="text-(--color-muted-text) transition-transform group-open:rotate-180" />
             </summary>
-            <p className="px-4 py-3 text-gray-600 text-justify">
+            <p className="px-4 py-3 text-(--color-muted-text) text-justify">
                 {description}
             </p>
         </details>

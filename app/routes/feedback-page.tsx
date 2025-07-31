@@ -181,8 +181,8 @@ export function NagivationTab({
                     <button
                         className={`flex flex-col md:flex-row gap-1 md:gap-2 items-center justify-center py-2 md:py-4 cursor-pointer text-sm md:text-base md:border-t-0 ${
                             tab === item.id
-                                ? 'border-t-2 md:border-b-2 border-[#8470ff] text-[#8470ff] font-bold bg-[#8470ff]/20'
-                                : 'text-(--paragraph) border-t-2 md:border-b-2 border-(--border-color) hover:bg-[#8470ff]/5'
+                                ? 'border-t-2 md:border-b-2 border-(--color-primary) text-(--color-primary) font-bold bg-(--color-primary)/20'
+                                : 'text-(--paragraph) border-t-2 md:border-b-2 border-(--border-color) hover:bg-(--color-primary)/5'
                         }`}
                         onClick={() => handleChangeTab(item.id)}
                         key={index}

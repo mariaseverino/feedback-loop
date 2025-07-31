@@ -8,6 +8,7 @@ import {
 export default [
     index('routes/landing-page.tsx'),
     route('feedback', 'routes/feedback-page.tsx'),
+    route('dashboard', 'routes/dashboard.tsx'),
 ] satisfies RouteConfig;
 
 // export default [

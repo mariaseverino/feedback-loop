@@ -56,7 +56,7 @@ export default function PriceSection() {
                     onClick={() => setBilling('monthly')}
                     className={`px-4 py-2 rounded-full text-sm cursor-pointer ${
                         billing === 'monthly'
-                            ? 'bg-[#191654] text-white'
+                            ? 'bg-(--color-primary) text-white'
                             : 'bg-gray-200 text-gray-800'
                     }`}
                 >
@@ -66,7 +66,7 @@ export default function PriceSection() {
                     onClick={() => setBilling('yearly')}
                     className={`px-4 py-2 rounded-full text-sm cursor-pointer ${
                         billing === 'yearly'
-                            ? 'bg-[#191654] text-white'
+                            ? 'bg-(--color-primary) text-white'
                             : 'bg-gray-200 text-gray-800'
                     }`}
                 >
@@ -80,7 +80,7 @@ export default function PriceSection() {
                         key={plan.name}
                         className={`rounded-2xl border shadow-sm p-6 flex flex-col ${
                             plan.highlight
-                                ? 'border-[#191654] md:scale-110'
+                                ? 'border-(--color-primary) md:scale-110'
                                 : 'border-gray-200'
                         }`}
                     >
@@ -110,8 +110,8 @@ export default function PriceSection() {
                         <button
                             className={`mt-6 w-full py-2 rounded-xl font-medium cursor-pointer ${
                                 plan.highlight
-                                    ? 'bg-[#191654] text-white hover:bg-[#191654]/90'
-                                    : 'bg-[#191654]/90 text-white hover:bg-[#191654]/80'
+                                    ? 'bg-(--color-primary) text-white hover:bg-(--color-primary)/90'
+                                    : 'bg-(--color-primary)/90 text-white hover:bg-(--color-primary)/80'
                             }`}
                         >
                             {plan.cta}
