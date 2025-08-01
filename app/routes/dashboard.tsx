@@ -1,18 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { Send, TrendingDown, TrendingUp } from 'lucide-react';
+import { ChartBarLabel } from '~/components/chart-bar-label';
+import { ChartPieDonutText } from '~/components/chart-pie-donut-text';
 import type { Route } from './+types/dashboard';
-import {
-    DoorOpen,
-    MessagesSquare,
-    Moon,
-    MoreVertical,
-    Send,
-    Sun,
-    Trash,
-} from 'lucide-react';
 
 export function meta({}: Route.MetaArgs) {
     return [
-        { title: 'Dashboard' },
+        { title: 'FeedbackLoop' },
         { name: 'description', content: 'Welcome to React Router!' },
     ];
 }
@@ -20,19 +13,57 @@ export function meta({}: Route.MetaArgs) {
 export default function Dashboard() {
     const cards = [
         {
-            name: 'Total de membros',
-            value: 5,
+            label: 'Feedbacks Enviados',
+            value: '1.254',
+            trending: 'UP',
+            porcent: 20,
         },
         {
-            name: 'Convites aceitos',
-            value: 5,
+            label: 'Colaboradores Participantes',
+            value: '67',
+            trending: 'DOWN',
+            porcent: 31,
         },
         {
-            name: 'Convites pendentes',
-            value: 5,
+            label: 'Média por Pessoa',
+            value: '18,7',
+            trending: 'DOWN',
+            porcent: 12,
+        },
+        {
+            label: 'Taxa de Engajamento',
+            value: '78%',
+            trending: 'UP',
+            porcent: 9,
         },
     ];
+    return (
+        <div className="flex flex-col px-6 lg:px-11 pt-14 gap-5 pb-5">
+            <div>
+                <h1 className="text-4xl font-bold pb-6">Dashboard</h1>
+                <div className="grid lg:grid-cols-4 gap-5 lg:gap-7">
+                    {cards.map(({ label, value, trending, porcent }) => (
+                        <Card
+                            label={label}
+                            value={value}
+                            trending={trending}
+                            porcent={porcent}
+                        />
+                    ))}
+                </div>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
+                <ChartBarLabel className="lg:col-span-2" />
+                <ChartPieDonutText />
+            </div>
+            <div>
+                <PendentMembers />
+            </div>
+        </div>
+    );
+}
 
+function PendentMembers() {
     const teamMembers = [
         {
             id: 1,
@@ -136,278 +167,129 @@ export default function Dashboard() {
         },
     ];
 
-    const [openId, setOpenId] = useState<number | null>(null);
-    const rowsPerPage = 7;
-    const [currentPage, setCurrentPage] = useState(1);
+    const rowsPerPage = 5;
 
-    const totalPages = Math.ceil(teamMembers.length / rowsPerPage);
-    const start = (currentPage - 1) * rowsPerPage;
-    const currentMembers = teamMembers.slice(start, start + rowsPerPage);
-
-    const handlePrevious = () => {
-        setCurrentPage((prev) => Math.max(prev - 1, 1));
-    };
-
-    const handleNext = () => {
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-    };
-
-    const [theme, setTheme] = useState('dark');
-
-    function handleTheme() {
-        setTheme((prevTheme) => {
-            const newTheme = prevTheme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            return newTheme;
-        });
-    }
-
-    useEffect(() => {
-        function getThemeFromStorage() {
-            const storedTheme = localStorage.getItem('theme');
-            if (storedTheme) {
-                setTheme(storedTheme);
-            }
-        }
-
-        getThemeFromStorage();
-    }, []);
+    const currentMembers = teamMembers.slice(0, rowsPerPage);
 
     return (
-        <div className="min-h-screen bg-[#f5f6fa]">
-            <header className="bg-[#eceaff] w-screen z-50">
-                <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
-                    <div className="flex items-center gap-4 text-(--color-primary)">
-                        <MessagesSquare className="size-8" />
-                        <div className="hidden md:block">
-                            <h1 className="font-bold text-xl">Dashboard RH</h1>
-                            <p className="text-sm text-(--color-primary)/70">
-                                Admin User
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3 md:gap-5">
-                        {/* Tema */}
-                        <button
-                            onClick={handleTheme}
-                            className="rounded-full bg-(--color-primary) text-white shadow-md hover:scale-105 transition-transform cursor-pointer p-2"
-                            aria-label="Alternar tema"
-                        >
-                            {theme === 'dark' ? (
-                                <Sun size={20} />
-                            ) : (
-                                <Moon size={20} />
-                            )}
-                        </button>
-                        {/* Logout */}
-                        <button className="flex gap-1 items-center text-(--color-text) cursor-pointer">
-                            <span className="text-base font-medium hidden md:block">
-                                Logout
-                            </span>
-                            <DoorOpen className="size-6" />
-                        </button>
-                    </div>
-                </nav>
-            </header>
-
-            <section className="max-w-7xl mx-auto pt-6 px-4 sm:px-6 lg:px-8">
-                {/* Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    {cards.map(({ name, value }) => (
-                        <div
-                            key={name}
-                            className="rounded-xl border border-gray-200 bg-white shadow p-6 text-center"
-                        >
-                            <p className="text-gray-600 text-sm">{name}</p>
-                            <p className="text-3xl font-bold text-(--color-primary) mt-2">
-                                {value}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Header + CTA */}
-                <div className="flex justify-between items-center mt-8 mb-6">
-                    <h2 className="text-2xl font-semibold text-(--color-primary)">
-                        Gerencie a Equipe
+        <div>
+            <div className="bg-white rounded-3xl flex flex-col justify-between shadow-sm">
+                <div className="flex justify-between px-6 py-5">
+                    <h2 className="leading-none font-semibold text-gray-800">
+                        Membros Pendentes
                     </h2>
-                    <button className="bg-[#43C6AC] text-white px-5 py-2 rounded-lg font-semibold hover:bg-[#3DBBA4] transition">
-                        + Convidar Membro
-                    </button>
-                </div>
-
-                {/* Tabela */}
-                <div className=" bg-white rounded-xl shadow border border-gray-200">
-                    <table className="min-w-full text-sm text-left">
-                        <thead className="bg-[#F1F5F9] text-[#1E293B] uppercase text-xs font-semibold">
-                            <tr>
-                                <th className="px-6 py-3">Membro</th>
-                                <th className="px-6 py-3 hidden md:table-cell">
-                                    Função
-                                </th>
-                                <th className="px-6 py-3">Status</th>
-                                <th className="px-6 py-3 hidden md:table-cell">
-                                    Entrou em
-                                </th>
-                                <th className="px-6 py-3">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200 last:border-b border-gray-200">
-                            {currentMembers.map(
-                                ({ name, role, status, joinDate, id }) => (
-                                    <tr key={id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4">{name}</td>
-                                        <td className="px-6 py-4 text-gray-700 hidden md:table-cell">
-                                            {role}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span
-                                                className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
-                                                    status === 'ativo'
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : status === 'inativo'
-                                                        ? 'bg-gray-100 text-gray-800'
-                                                        : 'bg-yellow-100 text-yellow-800'
-                                                }`}
-                                            >
-                                                {status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-70 hidden md:table-cell">
-                                            {joinDate}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <MemberActions
-                                                status={status}
-                                                name={name}
-                                                id={id}
-                                                openId={openId}
-                                                setOpenId={setOpenId}
-                                            />
-                                        </td>
-                                    </tr>
-                                )
-                            )}
-                        </tbody>
-                    </table>
-
-                    {/* Paginação com setas */}
-                    <div className="flex flex-col items-center justify-between py-3 gap-2">
-                        <p className="text-sm text-gray-600">
-                            Exibindo {start + 1}–
-                            {Math.min(start + rowsPerPage, teamMembers.length)}{' '}
-                            de {teamMembers.length}
-                        </p>
-
-                        <div className="space-x-2">
-                            <button
-                                onClick={handlePrevious}
-                                disabled={currentPage === 1}
-                                className={`px-3 py-1 text-sm border rounded ${
-                                    currentPage === 1
-                                        ? 'text-gray-400 border-gray-200 cursor-not-allowed'
-                                        : 'text-blue-600 border-blue-300 hover:bg-blue-50'
-                                }`}
-                            >
-                                Anterior
-                            </button>
-
-                            <button
-                                onClick={handleNext}
-                                disabled={currentPage === totalPages}
-                                className={`px-3 py-1 text-sm border rounded ${
-                                    currentPage === totalPages
-                                        ? 'text-gray-400 border-gray-200 cursor-not-allowed'
-                                        : 'text-blue-600 border-blue-300 hover:bg-blue-50'
-                                }`}
-                            >
-                                Próximo
-                            </button>
+                    {currentMembers.length >= rowsPerPage && (
+                        <div className="text-sm text-(--color-primary) hover:underline cursor-pointer font-medium">
+                            Ver mais
                         </div>
-                    </div>
+                    )}
                 </div>
-            </section>
+
+                <table className="min-w-full text-sm text-left">
+                    <thead className="text-[#1E293B] uppercase text-xs font-semibold">
+                        <tr>
+                            <th className="px-6 py-3">Membro</th>
+                            <th className="px-6 py-3 hidden lg:table-cell">
+                                Email
+                            </th>
+                            <th className="px-6 py-3  hidden md:table-cell">
+                                Função
+                            </th>
+
+                            <th className="px-6 py-3"></th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-(--color-background)">
+                        {currentMembers.map(({ name, role, email, id }) => (
+                            <tr key={id} className="hover:bg-gray-50">
+                                <td className="px-6 py-4 text-(--color-muted-text)">
+                                    {name}
+                                </td>
+                                <td className="px-6 py-4 text-(--color-muted-text) hidden lg:table-cell">
+                                    {email}
+                                </td>
+                                <td className="px-6 py-4 text-(--color-muted-text) hidden md:table-cell">
+                                    {role}
+                                </td>
+
+                                <td className="px-6 py-4">
+                                    <button className="inline-flex gap-1 items-center text-(--color-primary) hover:underline cursor-pointer font-medium bg-(--color-primary-ligth) px-2 py-1 rounded-lg">
+                                        <Send size={14} />
+                                        Reenviar convite
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
 
-interface MemberActionsProps {
-    status: string;
-    name: string;
-    id: number | null;
-    openId: number | null;
-    setOpenId: (value: number | null) => void;
-}
-
-export function MemberActions({
-    status,
-    name,
-    id,
-    openId,
-    setOpenId,
-}: MemberActionsProps) {
-    const menuRef = useRef(null);
-    const isOpen = openId === id;
-
-    // Fecha o menu ao clicar fora
-    useEffect(() => {
-        function handleClickOutside(e) {
-            if (menuRef.current && !menuRef.current.contains(e.target)) {
-                setOpenId(null);
-            }
-        }
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () =>
-            document.removeEventListener('mousedown', handleClickOutside);
-    }, [setOpenId]);
+function Card({
+    label,
+    value,
+    trending,
+    porcent,
+}: {
+    label: string;
+    value: string;
+    trending: string;
+    porcent: number;
+}) {
+    const isUp = trending === 'UP';
 
     return (
-        <div className="relative" ref={menuRef}>
-            <button
-                onClick={() => setOpenId(isOpen ? null : id)}
-                className="p-1 rounded hover:bg-gray-200"
-            >
-                <MoreVertical className="w-5 h-5 text-gray-600" />
-            </button>
-
-            {isOpen && (
-                <div className="absolute right-6 lg:right-23 z-10 w-48 bg-white border border-gray-200 rounded-md shadow-lg">
-                    <span className="gap-2 px-4 py-2 border-b border-gray-200 w-full flex font-bold">
-                        Ações
-                    </span>
-                    <ul className="text-sm text-gray-700 py-1">
-                        {status === 'pendente' && (
-                            <li>
-                                <button
-                                    onClick={() => {
-                                        console.log(
-                                            `Reenviar convite para ${name}`
-                                        );
-                                        setOpenId(null);
-                                    }}
-                                    className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
-                                >
-                                    <Send size={16} className="text-blue-600" />
-                                    Reenviar convite
-                                </button>
-                            </li>
-                        )}
-                        <li>
-                            <button
-                                onClick={() => {
-                                    console.log(`Remover membro ${name}`);
-                                    setOpenId(null);
-                                }}
-                                className="w-full flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-red-600"
-                            >
-                                <Trash size={16} />
-                                Remover membro
-                            </button>
-                        </li>
-                    </ul>
+        <div className="bg-white p-6 rounded-2xl flex flex-col gap-4 shadow">
+            <div className="flex justify-between items-start">
+                <div className="flex flex-col gap-1">
+                    <div className="text-sm text-(--color-muted-text)">
+                        {label}
+                    </div>
+                    <div className="text-3xl font-bold text-(--color-text)">
+                        {value}
+                    </div>
                 </div>
-            )}
+                <div
+                    className={`flex gap-1.5 rounded-2xl items-center ${
+                        isUp ? 'bg-[#C2FC92] text-green-60' : 'bg-[#FBA9A9]'
+                    } py-1.5 px-2`}
+                >
+                    {isUp ? (
+                        <>
+                            <TrendingUp size={16} />
+                        </>
+                    ) : (
+                        <>
+                            <TrendingDown size={16} />
+                        </>
+                    )}
+                    <span className="font-medium text-sm">{porcent} %</span>
+                </div>
+            </div>
+
+            <div className="mt-2">
+                <div
+                    className={`flex items-center gap-2 font-medium ${
+                        isUp ? 'text-green-600' : 'text-red-600'
+                    }`}
+                >
+                    {isUp ? (
+                        <>
+                            Tendência de alta este mês <TrendingUp size={16} />
+                        </>
+                    ) : (
+                        <>
+                            Tendência de queda este mês{' '}
+                            <TrendingDown size={16} />
+                        </>
+                    )}
+                </div>
+                <p className="text-xs text-(--color-muted-text)">
+                    Comparado aos últimos 6 meses
+                </p>
+            </div>
         </div>
     );
 }
