@@ -8,7 +8,10 @@ import {
 export default [
     index('routes/landing-page.tsx'),
     route('feedback', 'routes/feedback-page.tsx'),
-    layout('layout/layout.tsx', [route('dashboard', 'routes/dashboard.tsx')]),
+    layout('layout/layout.tsx', [
+        route('dashboard', 'routes/dashboard.tsx'),
+        route('equipe', 'routes/team.tsx'),
+    ]),
 ] satisfies RouteConfig;
 
 // export default [

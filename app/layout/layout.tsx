@@ -68,22 +68,26 @@ export function Sidebar() {
                 {/* Navegação Principal */}
                 <nav className="flex-1 px-4 space-y-2 text-sm py-4 flex flex-col items-start md:items-center lg:items-start">
                     <NavItem
+                        href="dashboard"
                         icon={
                             <LayoutDashboard className="size-5 md:size-6 lg:size-5" />
                         }
                         label="Visão Geral"
                     />
                     <NavItem
+                        href=""
                         icon={
                             <BarChart3 className="size-5 md:size-6 lg:size-5" />
                         }
                         label="Relatórios"
                     />
                     <NavItem
+                        href="equipe"
                         icon={<Users className="size-5 md:size-6 lg:size-5" />}
                         label="Equipe"
                     />
                     <NavItem
+                        href=""
                         icon={<Users2 className="size-5 md:size-6 lg:size-5" />}
                         label="Squads"
                     />
@@ -93,18 +97,21 @@ export function Sidebar() {
                 <div className="pb-2">
                     <div className="px-4 py-4 space-y-4 text-sm border-y border-(--color-background) flex flex-col items-start md:items-center lg:items-start">
                         <NavItem
+                            href=""
                             icon={
                                 <Bell className="size-5 md:size-6 lg:size-5" />
                             }
                             label="Notificações"
                         />
                         <NavItem
+                            href=""
                             icon={
                                 <CreditCard className="size-5 md:size-6 lg:size-5" />
                             }
                             label="Plano & Pagamentos"
                         />
                         <NavItem
+                            href=""
                             icon={
                                 <HelpCircle className="size-5 md:size-6 lg:size-5" />
                             }
@@ -129,10 +136,18 @@ export function Sidebar() {
     );
 }
 
-function NavItem({ icon, label }: { icon: React.ReactNode; label: string }) {
+function NavItem({
+    icon,
+    label,
+    href,
+}: {
+    icon: React.ReactNode;
+    label: string;
+    href: string;
+}) {
     return (
         <a
-            href="#"
+            href={href}
             className="flex items-center gap-3 px-3 py-2 rounded-md text-(--color-muted-text) hover:bg-(--color-primary-ligth) transition"
         >
             {icon}
