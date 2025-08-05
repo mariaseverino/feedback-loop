@@ -7,6 +7,7 @@ import {
     Send,
     Trash,
     UserPlus,
+    X,
 } from 'lucide-react';
 import type { Route } from './+types/team';
 import { useEffect, useRef, useState } from 'react';
@@ -164,184 +165,309 @@ export default function Team() {
         { value: 'all', label: 'Todos' },
     ];
 
+    const [isOpen, setIsOpen] = useState(false);
+    // const [imgOpen, setImgOpen] = useState<number>(0);
+
+    function handleOpenImg() {
+        setIsOpen(true);
+        // setImgOpen(index);
+    }
+
     return (
-        <div className="flex flex-col px-6 lg:px-11 pt-14 gap-5 pb-5">
-            <div>
-                <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
-                    Membros
-                </h1>
-                <p className="text-muted-foreground text-base mt-1">
-                    Gerencie a sua equipe.
-                </p>
-            </div>
-
-            <div className="rounded-3xl flex flex-col bg-white/60 shadow-sm">
-                <div className="flex flex-col lg:flex-row justify-between items-center pb-5 pt-5 gap-3">
-                    <div className="grid grid-cols-3 lg:flex lg:gap-5  rounded-tl-3xl w-full lg:w-auto px-4 gap-2.5">
-                        <SelectDemo
-                            items={columms}
-                            placeholder="Colunas"
-                            className="w-full lg:w-[180px]"
-                        />
-                        <SelectDemo
-                            items={interval}
-                            placeholder="Ultimos 30 dias"
-                            className="w-full lg:w-[180px]"
-                        />
-                        <SelectDemo
-                            items={filter}
-                            placeholder="Filtro"
-                            className="w-full lg:w-[180px]"
-                        />
-
-                        <div className="lg:flex gap-2 items-center border rounded-md px-2 w-full max-w-[300px] shadow-xs text-sm hidden">
-                            <Search className="text-muted-foreground size-4.5 " />
-                            <input
-                                type="text"
-                                placeholder="Buscar membro..."
-                                className="outline-0 text-muted-foreground"
-                            />
-                        </div>
-                    </div>
-                    <div className="w-full lg:w-auto px-4 flex gap-2.5">
-                        <div className="flex gap-2 items-center border rounded-md px-2 flex-1 shadow-xs text-sm lg:hidden">
-                            <Search className="text-muted-foreground size-4.5 " />
-                            <input
-                                type="text"
-                                placeholder="Buscar membro..."
-                                className="outline-0 text-muted-foreground"
-                            />
-                        </div>
-                        <button className="bg-(--color-primary) text-white px-4 md:px-6 py-2 hover:bg-(--color-primary)/90  cursor-pointer flex gap-1 items-center rounded-md font-medium transition-all duration-200 shadow-sm">
-                            <Plus
-                                size={20}
-                                className="hidden md:inline-block"
-                            />
-                            <span className="hidden md:inline-block">
-                                Convidar Membro
-                            </span>
-                            <UserPlus className="md:hidden inline-block" />
-                        </button>
-                    </div>
+        <>
+            <div className="flex flex-col px-6 lg:px-11 pt-14 gap-5 pb-5">
+                <div>
+                    <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground">
+                        Membros
+                    </h1>
+                    <p className="text-muted-foreground text-base mt-1">
+                        Gerencie a sua equipe.
+                    </p>
                 </div>
 
-                <div className="bg-white rounded-3xl flex flex-col justify-between z-50 pt-2">
-                    <table className="min-w-full text-sm text-left border-b border-(--color-background)">
-                        <thead className="text-[#1E293B] uppercase text-xs font-semibold">
-                            <tr>
-                                <th className="px-6 py-3">Membro</th>
-                                <th className="px-6 py-3 hidden lg:table-cell">
-                                    Email
-                                </th>
-                                <th className="px-6 py-3 hidden md:table-cell">
-                                    Função
-                                </th>
-                                <th className="px-6 py-3 hidden md:table-cell">
-                                    Squad
-                                </th>
-                                <th className="px-6 py-3">Status</th>
-                                <th className="px-6 py-3 hidden mlg:table-cell">
-                                    Entrou em
-                                </th>
+                <div className="rounded-3xl flex flex-col bg-white/60 shadow-sm">
+                    <div className="flex flex-col lg:flex-row justify-between items-center pb-5 pt-5 gap-3">
+                        <div className="grid grid-cols-3 lg:flex lg:gap-5  rounded-tl-3xl w-full lg:w-auto px-4 gap-2.5">
+                            <SelectDemo
+                                items={columms}
+                                placeholder="Colunas"
+                                className="w-full lg:w-[180px]"
+                            />
+                            <SelectDemo
+                                items={interval}
+                                placeholder="Ultimos 30 dias"
+                                className="w-full lg:w-[180px]"
+                            />
+                            <SelectDemo
+                                items={filter}
+                                placeholder="Filtro"
+                                className="w-full lg:w-[180px]"
+                            />
 
-                                <th className="px-6 py-3"></th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-(--color-background)">
-                            {currentMembers.map(
-                                ({
-                                    name,
-                                    role,
-                                    email,
-                                    id,
-                                    department,
-                                    status,
-                                    joinDate,
-                                }) => (
-                                    <tr key={id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 text-(--color-muted-text)">
-                                            {name}
-                                        </td>
-                                        <td className="px-6 py-4 text-(--color-muted-text) hidden lg:table-cell">
-                                            {email}
-                                        </td>
-                                        <td className="px-6 py-4 text-(--color-muted-text) hidden md:table-cell">
-                                            {role}
-                                        </td>
-                                        <td className="px-6 py-4 text-(--color-muted-text) hidden md:table-cell">
-                                            {department}
-                                        </td>
-
-                                        <th className="px-6 py-3">
-                                            <span
-                                                title={`${
-                                                    status === 'ativo'
-                                                        ? 'Membro já aceitou o convite'
-                                                        : 'Membro ainda não aceitou o convite'
-                                                }`}
-                                                className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
-                                                    status === 'ativo'
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : status === 'inativo'
-                                                        ? 'bg-gray-100 text-gray-800'
-                                                        : 'bg-yellow-100 text-yellow-800'
-                                                }`}
-                                            >
-                                                {status}
-                                            </span>
-                                        </th>
-                                        <td className="px-6 py-4 text-(--color-muted-text) hidden lg:table-cell">
-                                            {joinDate}
-                                        </td>
-
-                                        <td className="px-6 py-4">
-                                            <MemberActions
-                                                status={status}
-                                                name={name}
-                                                id={id}
-                                                openId={openId}
-                                                setOpenId={setOpenId}
-                                            />
-                                        </td>
-                                    </tr>
-                                )
-                            )}
-                        </tbody>
-                    </table>
-
-                    {/* Paginação com setas */}
-                    <div className="flex items-center py-3 gap-2 px-4 justify-end">
-                        <p className="text-sm text-(--color-muted-text)">
-                            {start + 1}–
-                            {Math.min(start + rowsPerPage, teamMembers.length)}{' '}
-                            de {teamMembers.length}
-                        </p>
-
-                        <div className="space-x-2">
+                            <div className="lg:flex gap-2 items-center border rounded-md px-2 w-full max-w-[300px] shadow-xs text-sm hidden">
+                                <Search className="text-muted-foreground size-4.5 " />
+                                <input
+                                    type="text"
+                                    placeholder="Buscar membro..."
+                                    className="outline-0 text-muted-foreground"
+                                />
+                            </div>
+                        </div>
+                        <div className="w-full lg:w-auto px-4 flex gap-2.5">
+                            <div className="flex gap-2 items-center border rounded-md px-2 flex-1 shadow-xs text-sm lg:hidden">
+                                <Search className="text-muted-foreground size-4.5 " />
+                                <input
+                                    type="text"
+                                    placeholder="Buscar membro..."
+                                    className="outline-0 text-muted-foreground"
+                                />
+                            </div>
                             <button
-                                onClick={handlePrevious}
-                                disabled={currentPage === 1}
-                                className={`px-2 py-1 ${
-                                    currentPage === 1
-                                        ? 'text-gray-400'
-                                        : 'text-(--color-primary) hover:bg-(--color-primary)/20 cursor-pointer rounded-full'
-                                }`}
+                                className="bg-(--color-primary) text-white px-4 md:px-6 py-2 hover:bg-(--color-primary)/90  cursor-pointer flex gap-1 items-center rounded-md font-medium transition-all duration-200 shadow-sm"
+                                onClick={handleOpenImg}
                             >
-                                <ChevronLeft size={20} />
-                            </button>
-
-                            <button
-                                onClick={handleNext}
-                                disabled={currentPage === totalPages}
-                                className={`px-2 py-1 ${
-                                    currentPage === totalPages
-                                        ? 'text-gray-400'
-                                        : 'text-(--color-primary) hover:bg-(--color-primary)/20 cursor-pointer rounded-full'
-                                }`}
-                            >
-                                <ChevronRight size={20} />
+                                <Plus
+                                    size={20}
+                                    className="hidden md:inline-block"
+                                />
+                                <span className="hidden md:inline-block">
+                                    Convidar Membro
+                                </span>
+                                <UserPlus className="md:hidden inline-block" />
                             </button>
                         </div>
+                    </div>
+
+                    <div className="bg-white rounded-3xl flex flex-col justify-between pt-2">
+                        <table className="min-w-full text-sm text-left border-b border-(--color-background)">
+                            <thead className="text-[#1E293B] uppercase text-xs font-semibold">
+                                <tr>
+                                    <th className="px-6 py-3">Membro</th>
+                                    <th className="px-6 py-3 hidden lg:table-cell">
+                                        Email
+                                    </th>
+                                    <th className="px-6 py-3 hidden md:table-cell">
+                                        Função
+                                    </th>
+                                    <th className="px-6 py-3 hidden md:table-cell">
+                                        Squad
+                                    </th>
+                                    <th className="px-6 py-3">Status</th>
+                                    <th className="px-6 py-3 hidden mlg:table-cell">
+                                        Entrou em
+                                    </th>
+
+                                    <th className="px-6 py-3"></th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-(--color-background)">
+                                {currentMembers.map(
+                                    ({
+                                        name,
+                                        role,
+                                        email,
+                                        id,
+                                        department,
+                                        status,
+                                        joinDate,
+                                    }) => (
+                                        <tr
+                                            key={id}
+                                            className="hover:bg-gray-50"
+                                        >
+                                            <td className="px-6 py-4 text-(--color-muted-text)">
+                                                {name}
+                                            </td>
+                                            <td className="px-6 py-4 text-(--color-muted-text) hidden lg:table-cell">
+                                                {email}
+                                            </td>
+                                            <td className="px-6 py-4 text-(--color-muted-text) hidden md:table-cell">
+                                                {role}
+                                            </td>
+                                            <td className="px-6 py-4 text-(--color-muted-text) hidden md:table-cell">
+                                                {department}
+                                            </td>
+
+                                            <th className="px-6 py-3">
+                                                <span
+                                                    title={`${
+                                                        status === 'ativo'
+                                                            ? 'Membro já aceitou o convite'
+                                                            : 'Membro ainda não aceitou o convite'
+                                                    }`}
+                                                    className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
+                                                        status === 'ativo'
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : status ===
+                                                              'inativo'
+                                                            ? 'bg-gray-100 text-gray-800'
+                                                            : 'bg-yellow-100 text-yellow-800'
+                                                    }`}
+                                                >
+                                                    {status}
+                                                </span>
+                                            </th>
+                                            <td className="px-6 py-4 text-(--color-muted-text) hidden lg:table-cell">
+                                                {joinDate}
+                                            </td>
+
+                                            <td className="px-6 py-4">
+                                                <MemberActions
+                                                    status={status}
+                                                    name={name}
+                                                    id={id}
+                                                    openId={openId}
+                                                    setOpenId={setOpenId}
+                                                />
+                                            </td>
+                                        </tr>
+                                    )
+                                )}
+                            </tbody>
+                        </table>
+
+                        {/* Paginação com setas */}
+                        <div className="flex items-center py-3 gap-2 px-4 justify-end">
+                            <p className="text-sm text-(--color-muted-text)">
+                                {start + 1}–
+                                {Math.min(
+                                    start + rowsPerPage,
+                                    teamMembers.length
+                                )}{' '}
+                                de {teamMembers.length}
+                            </p>
+
+                            <div className="space-x-2">
+                                <button
+                                    onClick={handlePrevious}
+                                    disabled={currentPage === 1}
+                                    className={`px-2 py-1 ${
+                                        currentPage === 1
+                                            ? 'text-gray-400'
+                                            : 'text-(--color-primary) hover:bg-(--color-primary)/20 cursor-pointer rounded-full'
+                                    }`}
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+
+                                <button
+                                    onClick={handleNext}
+                                    disabled={currentPage === totalPages}
+                                    className={`px-2 py-1 ${
+                                        currentPage === totalPages
+                                            ? 'text-gray-400'
+                                            : 'text-(--color-primary) hover:bg-(--color-primary)/20 cursor-pointer rounded-full'
+                                    }`}
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {isOpen && <InviteMemberModal setIsOpen={setIsOpen} />}
+        </>
+    );
+}
+
+function InviteMemberModal({
+    setIsOpen,
+}: {
+    setIsOpen: (value: boolean) => void;
+}) {
+    const [email, setEmail] = useState('');
+    const [invited, setInvited] = useState<string[]>([]);
+
+    function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+        if (e.key === 'Enter' && email.trim() !== '') {
+            e.preventDefault();
+
+            if (!invited.includes(email.trim())) {
+                setInvited((prev) => [...prev, email.trim()]);
+            }
+
+            setEmail('');
+        }
+    }
+    return (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div
+                className="h-screen w-screen bg-black absolute opacity-75 cursor-pointer"
+                onClick={() => setIsOpen(false)}
+            ></div>
+
+            <div className="flex items-center justify-center">
+                <div className="max-w-full max-h-[90vh] w-[400px] relative z-50 bg-white p-6 rounded-3xl flex flex-col gap-6 shadow-lg">
+                    {/* Botão de fechar */}
+                    <button
+                        className="absolute top-2 right-2 text-muted-foreground hover:bg-(--color-primary)/20 cursor-pointer rounded-full transition flex items-center justify-center"
+                        aria-label="Fechar modal"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        <X className="m-2" />
+                    </button>
+
+                    {/* Cabeçalho */}
+                    <div className="space-y-1">
+                        <h2 className="text-lg font-semibold">
+                            Convide um membro
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                            Envie um convite para alguém fazer parte da sua
+                            equipe.
+                        </p>
+                    </div>
+
+                    {/* Campo de email */}
+                    <div className="space-y-1">
+                        <label
+                            htmlFor="email"
+                            className="text-sm font-medium mb-2"
+                        >
+                            Email
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="nome@email.com"
+                            className="outline-none text-sm w-full shadow-xs border border-muted rounded-md px-3 py-2 text-muted-foreground focus:ring-2 focus:ring-offset-1 focus:ring-(--color-primary)"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                            Pressione Enter para adicionar
+                        </p>
+                    </div>
+
+                    {/* Lista de convidados */}
+                    {invited.length > 0 && (
+                        <div className="space-y-2">
+                            <p className="text-sm font-medium">
+                                Membros convidados
+                            </p>
+                            <ul className="text-sm text-muted-foreground space-y-1.5">
+                                {invited.map((item, i) => (
+                                    <li
+                                        key={i}
+                                        className="rounded-full bg-(--color-primary)/20 px-2 p-0.5 inline-block"
+                                    >
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Botão de envio */}
+                    <div>
+                        <button
+                            type="submit"
+                            className="w-full bg-(--color-primary) text-white font-medium rounded-md px-4 py-2 transition hover:bg-(--color-primary)/90 cursor-pointer"
+                        >
+                            Enviar convite
+                        </button>
                     </div>
                 </div>
             </div>

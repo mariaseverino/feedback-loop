@@ -74,23 +74,23 @@ export function Sidebar() {
                         }
                         label="Visão Geral"
                     />
-                    <NavItem
+                    {/* <NavItem
                         href=""
                         icon={
                             <BarChart3 className="size-5 md:size-6 lg:size-5" />
                         }
                         label="Relatórios"
-                    />
+                    /> */}
                     <NavItem
                         href="equipe"
                         icon={<Users className="size-5 md:size-6 lg:size-5" />}
                         label="Equipe"
                     />
-                    <NavItem
+                    {/* <NavItem
                         href=""
                         icon={<Users2 className="size-5 md:size-6 lg:size-5" />}
                         label="Squads"
-                    />
+                    /> */}
                 </nav>
 
                 {/* Rodapé */}
@@ -148,7 +148,7 @@ function NavItem({
     return (
         <a
             href={href}
-            className="flex items-center gap-3 px-3 py-2 rounded-md text-(--color-muted-text) hover:bg-(--color-primary-ligth) transition"
+            className="flex items-center gap-3 px-3 py-2 rounded-md text-(--color-muted-text) hover:bg-(--color-primary-ligth) transition w-full"
         >
             {icon}
             <span className="inline-block md:hidden lg:inline-block">

@@ -49,7 +49,7 @@ export default function NavBar() {
                 {/* Ações (login / CTA) */}
                 <div className="hidden md:flex items-center space-x-4">
                     <a
-                        href="/signin"
+                        href="/dashboard"
                         className="px-4 py-2 font-bold text-white hover:bg-white/10 transition-all duration-200 hover:rounded-xl"
                     >
                         Entrar
