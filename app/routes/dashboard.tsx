@@ -44,6 +44,7 @@ export default function Dashboard() {
                 <div className="grid lg:grid-cols-4 gap-5 lg:gap-7">
                     {cards.map(({ label, value, trending, porcent }) => (
                         <Card
+                            key={value}
                             label={label}
                             value={value}
                             trending={trending}
