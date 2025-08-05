@@ -61,7 +61,7 @@ export default function NavBar() {
                         Criar conta
                     </a> */}
                     <a
-                        href="/signup"
+                        href="/dashboard"
                         className="rounded-xl bg-white px-4 py-2 text-sm font-bold text-(--color-primary) hover:bg-white/90 transition-all duration-200 shadow-md"
                     >
                         Criar conta

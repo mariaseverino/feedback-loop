@@ -22,7 +22,7 @@ export default function HeroSection() {
                             Começar agora
                         </a> */}
                         <a
-                            href="/signup"
+                            href="/dashboard"
                             className="mt-8 rounded-xl bg-white px-6 py-4 text-sm sm:text-lg font-bold text-(--color-primary) hover:bg-white/90 transition-all duration-200 items-center inline-block shadow-md"
                         >
                             Começar agora

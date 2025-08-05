@@ -11,7 +11,7 @@ export default function CallToAction() {
                         transformar seu ambiente de trabalho.
                     </p>
                     <a
-                        href="/signup"
+                        href="/dashboard"
                         className="rounded-xl bg-white px-6 py-4 text-sm sm:text-lg font-bold text-(--color-primary) hover:bg-white/90 transition-all duration-200 flex items-center gap-2 shadow-md"
                     >
                         Assinar agora
