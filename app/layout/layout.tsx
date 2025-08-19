@@ -1,159 +1,160 @@
-import { Outlet } from 'react-router';
-// import Sidebar from '~/components/sidebar';
-import { useState } from 'react';
-import {
-    BarChart3,
-    Bell,
-    CreditCard,
-    HelpCircle,
-    LayoutDashboard,
-    MessagesSquare,
-    PanelLeft,
-    Users,
-    Users2,
-} from 'lucide-react';
+import { Link, Outlet, useLocation } from 'react-router';
+import { useEffect, useState } from 'react';
+import { DoorOpen, MessagesSquare, Moon, Sun } from 'lucide-react';
+import { useAuth } from '~/contexts/authContext';
+import { Can } from '~/hooks/permissions';
 
 export default function Layout() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { user } = useAuth();
 
     return (
         <>
-            <Sidebar />
-            <main className="md:pl-20 lg:pl-64 min-h-screen bg-[#f5f4ff]">
+            <NavBar />
+            <main
+                className={`lg:px-44 min-h-screen bg-[#F2F5FA] ${
+                    Can(user!.role, 'view_navbar') ? 'pt-28' : 'pt-16'
+                }`}
+            >
                 <Outlet />
             </main>
         </>
     );
 }
 
-export function Sidebar() {
-    const [isOpen, setIsOpen] = useState(false);
+export function NavBar() {
+    const [theme, setTheme] = useState('dark');
+    const { user } = useAuth();
+    const location = useLocation();
+
+    const initials = user?.name
+        .split(' ')
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join('')
+        .toUpperCase();
+
+    function handleTheme() {
+        setTheme((prevTheme) => {
+            const newTheme = prevTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            return newTheme;
+        });
+    }
+
+    useEffect(() => {
+        function getThemeFromStorage() {
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme) {
+                setTheme(storedTheme);
+            }
+        }
+
+        getThemeFromStorage();
+    }, []);
+
     return (
-        <>
-            {/* Botão toggle para mobile */}
-            <button
-                className="md:hidden fixed top-4 left-4 z-50"
-                onClick={() => setIsOpen(true)}
-            >
-                <PanelLeft size={20} className="text-(--color-muted-text)" />
-            </button>
-
-            {/* Overlay para fechar */}
-            {isOpen && (
-                <div
-                    className="fixed inset-0 bg-black/40 z-40 md:hidden"
-                    onClick={() => setIsOpen(false)}
-                />
-            )}
-
-            {/* Sidebar */}
-            <aside
-                className={`w-64 md:w-20 lg:w-64 h-screen flex flex-col justify-between bg-white shadow-sm fixed font-medium z-50 transform transition-transform duration-300 ${
-                    isOpen ? 'translate-x-0' : '-translate-x-full'
-                } md:translate-x-0`}
-            >
-                {/* Topo - Logo */}
-                <div className="p-6 text-(--color-primary) flex gap-2 border-b border-(--color-background)">
-                    <MessagesSquare className="size-7" />
-                    <h1 className="text-xl font-bold inline-block md:hidden lg:inline-block">
-                        Dashboard RH
-                    </h1>
+        <header className="bg-white fixed w-screen shadow-sm z-50">
+            <div className="container mx-auto px-6 pt-5 flex flex-col">
+                <div className="flex justify-between items-center pb-5">
+                    <div className="flex items-center gap-4 text-(--color-primary)">
+                        <MessagesSquare className="size-8" />
+                        <span className="font-bold text-xl md:block hidden">
+                            {user?.organization}
+                        </span>
+                    </div>
+                    <div className="flex gap-3 md:gap-4 items-center">
+                        <button
+                            onClick={handleTheme}
+                            className="rounded-full bg-(--color-primary) text-white shadow-md hover:scale-105 transition-transform cursor-pointer p-2.5 md:p-3"
+                            aria-label="Alternar tema"
+                        >
+                            {theme === 'dark' ? (
+                                <Sun size={22} />
+                            ) : (
+                                <Moon size={22} />
+                            )}
+                        </button>
+                        <div className="flex items-center p-2.5 md:py-1.5 md:px-2.5 bg-[#F2F5FA] rounded-full justify-between md:w-64">
+                            <div className="md:flex gap-2 items-center hidden">
+                                <div className="bg-indigo-100 text-indigo-600 rounded-full w-9 h-9 flex items-center justify-center font-semibold">
+                                    {initials}
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="font-medium">
+                                        {user?.name}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                        {user?.email}
+                                    </span>
+                                </div>
+                            </div>
+                            <button className="cursor-pointer text-(--color-muted-text)">
+                                <DoorOpen />
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                {/* <MessagesSquare className="size-8" />
-            <div className="hidden md:block">
-                <h1 className="font-bold text-xl">Dashboard RH</h1>
-                <p className="text-sm text-(--color-primary)/70">Admin User</p>
-            </div> */}
-
-                {/* Navegação Principal */}
-                <nav className="flex-1 px-4 space-y-2 text-sm py-4 flex flex-col items-start md:items-center lg:items-start">
-                    <NavItem
-                        href="dashboard"
-                        icon={
-                            <LayoutDashboard className="size-5 md:size-6 lg:size-5" />
-                        }
-                        label="Visão Geral"
-                    />
-                    {/* <NavItem
-                        href=""
-                        icon={
-                            <BarChart3 className="size-5 md:size-6 lg:size-5" />
-                        }
-                        label="Relatórios"
-                    /> */}
-                    <NavItem
-                        href="equipe"
-                        icon={<Users className="size-5 md:size-6 lg:size-5" />}
-                        label="Equipe"
-                    />
-                    {/* <NavItem
-                        href=""
-                        icon={<Users2 className="size-5 md:size-6 lg:size-5" />}
-                        label="Squads"
-                    /> */}
-                </nav>
-
-                {/* Rodapé */}
-                <div className="pb-2">
-                    <div className="px-4 py-4 space-y-4 text-sm border-y border-(--color-background) flex flex-col items-start md:items-center lg:items-start">
+                {Can(user!.role, 'view_navbar') && (
+                    <nav className="flex">
                         <NavItem
-                            href=""
-                            icon={
-                                <Bell className="size-5 md:size-6 lg:size-5" />
-                            }
-                            label="Notificações"
+                            to="dashboard"
+                            label="Visão Geral"
+                            active={location.pathname === '/dashboard'}
+                        />
+
+                        <NavItem
+                            to="equipe"
+                            label="Equipe"
+                            active={location.pathname === '/equipe'}
                         />
                         <NavItem
-                            href=""
-                            icon={
-                                <CreditCard className="size-5 md:size-6 lg:size-5" />
-                            }
-                            label="Plano & Pagamentos"
+                            to="feedback"
+                            label="Feedbacks"
+                            active={location.pathname === '/feedback'}
                         />
+                        {Can(user!.role, 'view_billing') && (
+                            <NavItem
+                                to="plano-&-pagamento"
+                                label="Plano & Pagamentos"
+                                active={
+                                    location.pathname === '/plano-&-pagamento'
+                                }
+                            />
+                        )}
                         <NavItem
-                            href=""
-                            icon={
-                                <HelpCircle className="size-5 md:size-6 lg:size-5" />
-                            }
+                            to="/ajuda"
                             label="Ajuda"
+                            active={location.pathname === '/ajuda'}
                         />
-                    </div>
-                    {/* Usuário */}
-                    <div className="flex items-center gap-3 py-4 px-4  justify-start md:justify-center lg:justify-start">
-                        <div className="bg-indigo-100 text-indigo-600 rounded-full w-10 h-10 flex items-center justify-center font-semibold">
-                            MS
-                        </div>
-                        <div className="flex flex-col md:hidden lg:flex">
-                            <span className="font-medium">Maria Severino</span>
-                            <span className="text-xs text-gray-500">
-                                maria@email.com
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </>
+                    </nav>
+                )}
+            </div>
+        </header>
     );
 }
 
 function NavItem({
-    icon,
     label,
-    href,
+    to,
+    active,
 }: {
-    icon: React.ReactNode;
     label: string;
-    href: string;
+    to: string;
+    active?: boolean;
 }) {
     return (
-        <a
-            href={href}
-            className="flex items-center gap-3 px-3 py-2 rounded-md text-(--color-muted-text) hover:bg-(--color-primary-ligth) transition w-full"
+        <Link
+            to={to}
+            className={`
+        px-3 py-2 inline-block transition
+        ${
+            active
+                ? 'border-b-2 border-(--color-primary) text-(--color-primary) font-medium'
+                : 'text-(--color-muted-text) hover:bg-(--color-primary-ligth)/20 hover:rounded-t-md'
+        }
+      `}
         >
-            {icon}
-            <span className="inline-block md:hidden lg:inline-block">
-                {label}
-            </span>
-        </a>
+            {label}
+        </Link>
     );
 }

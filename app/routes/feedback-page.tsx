@@ -110,11 +110,8 @@ export default function FeedbackPage() {
     }, []);
 
     return (
-        <div
-            className={`relative min-h-screen bg-(--background) pb-5 ${theme}`}
-        >
-            <Header theme={theme} handleTheme={handleTheme} />
-            <div className="md:pt-25 pt-16 pb-5">
+        <>
+            <div className="flex lg:pt-14 pt-4 md:pt-8">
                 <div className="h-full max-w-2xl mx-auto rounded-md md:border border-(--border-color) shadow-md">
                     <NagivationTab
                         tabs={tabs}
@@ -150,7 +147,7 @@ export default function FeedbackPage() {
                 className="grid grid-cols-3 w-full fixed bottom-0 md:hidden"
                 type="mobile"
             />
-        </div>
+        </>
     );
 }
 

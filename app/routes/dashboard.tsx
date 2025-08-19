@@ -2,12 +2,30 @@ import { Send, TrendingDown, TrendingUp } from 'lucide-react';
 import { ChartBarLabel } from '~/components/chart-bar-label';
 import { ChartPieDonutText } from '~/components/chart-pie-donut-text';
 import type { Route } from './+types/dashboard';
+import { redirect } from 'react-router';
+import { getSession } from '~/hooks/auth';
+import { Can } from '~/hooks/permissions';
 
 export function meta({}: Route.MetaArgs) {
     return [
         { title: 'FeedbackLoop' },
         { name: 'description', content: 'Welcome to React Router!' },
     ];
+}
+
+export async function loader({ request }: { request: Request }) {
+    const session = await getSession(request.headers.get('Cookie'));
+    const user = session.get('user') ?? null;
+
+    // if (!user || !user.permissions.includes('view_dashboard')) {
+    //     throw redirect('/feedback');
+    // }
+
+    if (!user || !Can(user.role, 'view_dashboard')) {
+        throw redirect('/feedback');
+    }
+
+    return { user };
 }
 
 export default function Dashboard() {
