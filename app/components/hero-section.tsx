@@ -1,6 +1,4 @@
-import { commitSession, getSession } from '~/hooks/auth';
 import NavBar from './navbar';
-import { Form, redirect } from 'react-router';
 
 export default function HeroSection() {
     return (
@@ -23,12 +21,15 @@ export default function HeroSection() {
                         >
                             Começar agora
                         </a> */}
-                        <Form method="post">
-                            <button className="mt-8 rounded-xl bg-white px-6 py-4 text-sm sm:text-lg font-bold text-(--color-primary) hover:bg-white/90 transition-all duration-200 items-center inline-block shadow-md">
+                        <div>
+                            <a
+                                href="/login"
+                                className="mt-8 rounded-xl bg-white px-6 py-4 text-sm sm:text-lg font-bold text-(--color-primary) hover:bg-white/90 transition-all duration-200 items-center inline-block shadow-md"
+                            >
                                 Começar agora
                                 <span className="ml-2">→</span>
-                            </button>
-                        </Form>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

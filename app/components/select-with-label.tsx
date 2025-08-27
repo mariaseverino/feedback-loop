@@ -17,6 +17,7 @@ interface SelectWithLabelProps {
     placeholder: string;
     id: string;
     value?: string;
+    className?: string;
 }
 
 export default function SelectWithLabel({
@@ -25,6 +26,7 @@ export default function SelectWithLabel({
     placeholder,
     id,
     value = '',
+    className,
 }: SelectWithLabelProps) {
     return (
         <div>
