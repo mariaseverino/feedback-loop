@@ -1,32 +1,20 @@
-'use client';
-
-import type React from 'react';
-
 import { useState } from 'react';
-
 import { Eye, EyeOff, MessagesSquare } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { registerFormSchema, type RegistrationData } from '~/types/auth';
 
 interface PersonalDataStepProps {
-    data: {
-        name: string;
-        email: string;
-        password: string;
-        confirmPassword: string;
-        organizationName: string;
-        plan: 'free' | 'basic' | 'premium';
-    };
-    onUpdate: (data: Partial<PersonalDataStepProps['data']>) => void;
+    onSave: (data: RegistrationData) => void;
     onNext: () => void;
 }
 
-export function PersonalDataStep({
-    data,
-    onUpdate,
+export function RegistrationDataStep({
+    onSave,
     onNext,
 }: PersonalDataStepProps) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [errors, setErrors] = useState<Record<string, string>>({});
 
     const plans = [
         {
@@ -70,60 +58,26 @@ export function PersonalDataStep({
         },
     ];
 
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm<RegistrationData>({
+        resolver: zodResolver(registerFormSchema),
+        defaultValues: { plan: 'free' },
+    });
 
-    const validatePassword = (password: string) => {
-        const hasMinLength = password.length >= 8;
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasNumber = /\d/.test(password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const selectedPlan = watch('plan');
 
-        return hasMinLength && hasUpperCase && hasNumber && hasSpecialChar;
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const newErrors: Record<string, string> = {};
-
-        if (!data.name.trim()) {
-            newErrors.name = 'Nome é obrigatório';
-        }
-
-        if (!data.email.trim()) {
-            newErrors.email = 'E-mail é obrigatório';
-        } else if (!validateEmail(data.email)) {
-            newErrors.email = 'E-mail inválido';
-        }
-
-        if (!data.password) {
-            newErrors.password = 'Senha é obrigatória';
-        } else if (!validatePassword(data.password)) {
-            newErrors.password =
-                'Senha deve ter 8+ caracteres, 1 maiúscula, 1 número e 1 caractere especial';
-        }
-
-        if (!data.confirmPassword) {
-            newErrors.confirmPassword = 'Confirmação de senha é obrigatória';
-        } else if (data.password !== data.confirmPassword) {
-            newErrors.confirmPassword = 'As senhas não coincidem';
-        }
-
-        if (!data.organizationName.trim()) {
-            newErrors.organizationName = 'Nome da organização é obrigatório';
-        }
-
-        setErrors(newErrors);
-
-        if (Object.keys(newErrors).length === 0) {
-            onNext();
-        }
-    };
+    function handleRegisterForm(data: RegistrationData) {
+        console.log(data);
+        onSave(data);
+        onNext();
+    }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(handleRegisterForm)} className="space-y-6">
             <div className="flex flex-col items-center space-y-4">
                 <MessagesSquare size={48} className="text-(--color-primary)" />
                 <h1 className="text-2xl font-semibold tracking-tight text-(--color-primary)">
@@ -157,15 +111,12 @@ export function PersonalDataStep({
                         <input
                             id="name"
                             type="text"
-                            value={data.name}
-                            onChange={(e) => onUpdate({ name: e.target.value })}
-                            // className={errors.name ? 'border-destructive' : ''}
+                            {...register('name')}
                             className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                            // required
                         />
                         {errors.name && (
                             <p className="text-destructive text-sm mt-1">
-                                {errors.name}
+                                {errors.name.message}
                             </p>
                         )}
                     </div>
@@ -185,19 +136,14 @@ export function PersonalDataStep({
                         </label>
                         <input
                             id="email"
-                            type="email"
-                            value={data.email}
-                            onChange={(e) =>
-                                onUpdate({ email: e.target.value })
-                            }
+                            type="text"
+                            {...register('email')}
                             placeholder="m@email.com"
-                            // className={errors.email ? 'border-destructive' : ''}
                             className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
-                            // required
                         />
                         {errors.email && (
                             <p className="text-destructive text-sm mt-1">
-                                {errors.email}
+                                {errors.email.message}
                             </p>
                         )}
                     </div>
@@ -221,10 +167,7 @@ export function PersonalDataStep({
                             <input
                                 id="password"
                                 type={showPassword ? 'text' : 'password'}
-                                value={data.password}
-                                onChange={(e) =>
-                                    onUpdate({ password: e.target.value })
-                                }
+                                {...register('password')}
                                 className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                             />
                             <button
@@ -241,7 +184,7 @@ export function PersonalDataStep({
                         </div>
                         {errors.password && (
                             <p className="text-destructive text-sm mt-1">
-                                {errors.password}
+                                {errors.password.message}
                             </p>
                         )}
                     </div>
@@ -263,17 +206,7 @@ export function PersonalDataStep({
                             <input
                                 id="confirmPassword"
                                 type={showConfirmPassword ? 'text' : 'password'}
-                                value={data.confirmPassword}
-                                onChange={(e) =>
-                                    onUpdate({
-                                        confirmPassword: e.target.value,
-                                    })
-                                }
-                                // className={
-                                //     errors.confirmPassword
-                                //         ? 'border-destructive pr-10'
-                                //         : 'pr-10'
-                                // }
+                                {...register('confirmPassword')}
                                 className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 // required
                             />
@@ -293,7 +226,7 @@ export function PersonalDataStep({
                         </div>
                         {errors.confirmPassword && (
                             <p className="text-destructive text-sm mt-1">
-                                {errors.confirmPassword}
+                                {errors.confirmPassword.message}
                             </p>
                         )}
                     </div>
@@ -320,16 +253,13 @@ export function PersonalDataStep({
                 <input
                     id="organizationName"
                     type="text"
-                    value={data.organizationName}
-                    onChange={(e) =>
-                        onUpdate({ organizationName: e.target.value })
-                    }
+                    {...register('organizationName')}
                     placeholder="Ex: Tech Solutions Inc."
                     className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                 />
                 {errors.organizationName && (
                     <p className="text-destructive text-sm mt-1">
-                        {errors.organizationName}
+                        {errors.organizationName.message}
                     </p>
                 )}
             </div>
@@ -340,16 +270,21 @@ export function PersonalDataStep({
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                     {plans.map((plan) => (
-                        <div
+                        <label
                             key={plan.id}
-                            className={`cursor-pointer transition-all hover:shadow-md rounded-md ${
-                                data.plan === plan.id
-                                    ? 'ring ring-(--color-primary)'
-                                    : 'border'
+                            className={`cursor-pointer transition-all hover:shadow-md rounded-md relative block border p-4 ${
+                                selectedPlan === plan.id
+                                    ? 'ring-2 ring-(--color-primary)'
+                                    : ''
                             }`}
-                            onClick={() => onUpdate({ plan: plan.id })}
                         >
-                            <div className="text-center flex flex-col justify-between h-full py-2 ">
+                            <input
+                                type="radio"
+                                value={plan.id}
+                                {...register('plan')}
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            />
+                            <div className="text-center flex flex-col justify-between h-full py-2">
                                 <div className="text-lg">{plan.name}</div>
                                 <div className="flex items-baseline justify-center">
                                     <span className="text-2xl font-bold text-(--color-primary)">
@@ -363,20 +298,7 @@ export function PersonalDataStep({
                                     {plan.description}
                                 </p>
                             </div>
-                            {/* <div>
-                                <ul className="space-y-2">
-                                    {plan.features.map((feature, index) => (
-                                        <li
-                                            key={index}
-                                            className="flex items-center text-sm"
-                                        >
-                                            <Check className="h-4 w-4 text-accent mr-2 flex-shrink-0" />
-                                            {feature}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div> */}
-                        </div>
+                        </label>
                     ))}
                 </div>
             </div>

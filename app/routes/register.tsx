@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
 import type { Route } from './+types/register';
-import { PersonalDataStep } from '~/components/personal-data-step';
 import { ResumeStep } from '~/components/resume-step';
+import type { RegistrationData } from '~/types/auth';
+import { RegistrationDataStep } from '~/components/registration-data-step';
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -11,74 +12,15 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export interface RegistrationData {
-    personalData: {
-        name: string;
-        email: string;
-        password: string;
-        confirmPassword: string;
-        organizationName: string;
-        plan: 'free' | 'basic' | 'premium';
-    };
-    organizationData: {
-        organizationName: string;
-        plan: 'free' | 'basic' | 'premium';
-    };
-    paymentData: {
-        cardName: string;
-        cardNumber: string;
-        expiryDate: string;
-        cvv: string;
-    };
-}
-
 export default function Register() {
     const [currentStep, setCurrentStep] = useState(1);
-    const [registrationData, setRegistrationData] = useState<RegistrationData>({
-        personalData: {
-            name: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-            organizationName: '',
-            plan: 'free',
-        },
-        organizationData: {
-            organizationName: '',
-            plan: 'free',
-        },
-        paymentData: {
-            cardName: '',
-            cardNumber: '',
-            expiryDate: '',
-            cvv: '',
-        },
-    });
+    const [registrationData, setRegistrationData] =
+        useState<RegistrationData>();
 
-    const updatePersonalData = (
-        data: Partial<RegistrationData['personalData']>
-    ) => {
+    const saveRegistrationData = (data: RegistrationData) => {
         setRegistrationData((prev) => ({
             ...prev,
-            personalData: { ...prev.personalData, ...data },
-        }));
-    };
-
-    const updateOrganizationData = (
-        data: Partial<RegistrationData['organizationData']>
-    ) => {
-        setRegistrationData((prev) => ({
-            ...prev,
-            organizationData: { ...prev.organizationData, ...data },
-        }));
-    };
-
-    const updatePaymentData = (
-        data: Partial<RegistrationData['paymentData']>
-    ) => {
-        setRegistrationData((prev) => ({
-            ...prev,
-            paymentData: { ...prev.paymentData, ...data },
+            ...data,
         }));
     };
 
@@ -104,24 +46,20 @@ export default function Register() {
         <div className="min-h-screen flex items-center justify-center p-4 bg-[#F2F5FA]">
             <div className="bg-card rounded-lg shadow-lg p-8 max-w-2xl">
                 {currentStep === 1 && (
-                    <PersonalDataStep
-                        data={registrationData.personalData}
-                        onUpdate={updatePersonalData}
+                    <RegistrationDataStep
+                        onSave={saveRegistrationData}
                         onNext={nextStep}
                     />
                 )}
 
                 {currentStep === 2 && (
                     <ResumeStep
-                        registrationData={registrationData}
-                        paymentData={registrationData.paymentData}
-                        onUpdate={updatePaymentData}
+                        registrationData={registrationData!}
                         onPrev={prevStep}
                         onComplete={handleComplete}
                     />
                 )}
             </div>
         </div>
-        // </div>
     );
 }
