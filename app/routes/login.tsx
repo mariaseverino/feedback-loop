@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import type { Route } from './+types/login';
 import { Eye, EyeOff, MessagesSquare } from 'lucide-react';
+import { loginFormSchema, type LoginData } from '~/types/auth';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -11,51 +14,19 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
-    const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const [loginData, setLoginData] = useState<{
-        email: string;
-        password: string;
-    }>({
-        email: '',
-        password: '',
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<LoginData>({
+        resolver: zodResolver(loginFormSchema),
     });
 
-    const updatePersonalData = (
-        data: Partial<{ email: string; password: string }>
-    ) => {
-        setLoginData((prev) => ({
-            ...prev,
-            ...data,
-        }));
-    };
-
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const newErrors: Record<string, string> = {};
-
-        if (!loginData.email.trim()) {
-            newErrors.email = 'E-mail é obrigatório';
-        } else if (!validateEmail(loginData.email)) {
-            newErrors.email = 'E-mail inválido';
-        }
-
-        if (!loginData.password) {
-            newErrors.password = 'Senha é obrigatória';
-        }
-
-        setErrors(newErrors);
-
-        if (Object.keys(newErrors).length === 0) {
-            console.log('login realizado:', loginData);
-            alert('login realizado');
-        }
-    };
+    function handleLoginForm(data: LoginData) {
+        console.log('login realizado:', data);
+        alert('login realizado');
+    }
 
     return (
         <div className="flex min-h-screen flex-col justify-center items-center bg-[#F2F5FA]">
@@ -126,7 +97,7 @@ export default function Login() {
                     </div> */}
 
                     <form
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSubmit(handleLoginForm)}
                         className="flex flex-col gap-4"
                     >
                         <div className="flex flex-col gap-3">
@@ -143,16 +114,11 @@ export default function Login() {
                                 id="email"
                                 type="email"
                                 placeholder="m@email.com"
-                                value={loginData.email}
-                                onChange={(e) =>
-                                    updatePersonalData({
-                                        email: e.target.value,
-                                    })
-                                }
+                                {...register('email')}
                             />
                             {errors.email && (
                                 <p className="text-destructive text-sm mt-1">
-                                    {errors.email}
+                                    {errors.email.message}
                                 </p>
                             )}
                         </div>
@@ -179,12 +145,7 @@ export default function Login() {
                                 <input
                                     id="password"
                                     type={showPassword ? 'text' : 'password'}
-                                    value={loginData.password}
-                                    onChange={(e) =>
-                                        updatePersonalData({
-                                            password: e.target.value,
-                                        })
-                                    }
+                                    {...register('password')}
                                     className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 />
                                 <button
@@ -203,7 +164,7 @@ export default function Login() {
                             </div>
                             {errors.password && (
                                 <p className="text-destructive text-sm mt-1">
-                                    {errors.password}
+                                    {errors.password.message}
                                 </p>
                             )}
                         </div>

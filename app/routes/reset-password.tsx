@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Eye, EyeOff, MessagesSquare } from 'lucide-react';
 import type { Route } from './+types/reset-password';
+import { useForm } from 'react-hook-form';
+import { resetPasswordFormSchema, type ResetPasswordData } from '~/types/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -10,63 +13,21 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function ResetPassword() {
-    const [errors, setErrors] = useState<Record<string, string>>({});
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [resetPasswordData, setResetPasswordData] = useState<{
-        password: string;
-        confirmPassword: string;
-    }>({
-        password: '',
-        confirmPassword: '',
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<ResetPasswordData>({
+        resolver: zodResolver(resetPasswordFormSchema),
     });
 
-    const updateResetPasswordData = (
-        data: Partial<{
-            password: string;
-            confirmPassword: string;
-        }>
-    ) => {
-        setResetPasswordData((prev) => ({
-            ...prev,
-            ...data,
-        }));
-    };
-
-    const validatePassword = (password: string) => {
-        const hasMinLength = password.length >= 8;
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasNumber = /\d/.test(password);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-        return hasMinLength && hasUpperCase && hasNumber && hasSpecialChar;
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const newErrors: Record<string, string> = {};
-
-        if (!resetPasswordData.password) {
-            newErrors.password = 'Senha é obrigatória';
-        } else if (!validatePassword(resetPasswordData.password)) {
-            newErrors.password =
-                'Senha deve ter 8+ caracteres, 1 maiúscula, 1 número e 1 caractere especial';
-        }
-
-        if (!resetPasswordData.confirmPassword) {
-            newErrors.confirmPassword = 'Confirmação de senha é obrigatória';
-        } else if (
-            resetPasswordData.password !== resetPasswordData.confirmPassword
-        ) {
-            newErrors.confirmPassword = 'As senhas não coincidem';
-        }
-
-        setErrors(newErrors);
-
-        if (Object.keys(newErrors).length === 0) {
-            console.log('s');
-        }
-    };
+    function handleResetPasswordForm(data: ResetPasswordData) {
+        console.log('reset realizado:', data);
+        alert('reset realizado');
+    }
     return (
         <div className="flex min-h-screen flex-col justify-center items-center bg-[#F2F5FA]">
             <div
@@ -95,7 +56,7 @@ export default function ResetPassword() {
                     className="px-6 flex flex-col gap-4"
                 >
                     <form
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSubmit(handleResetPasswordForm)}
                         className="flex flex-col gap-4"
                     >
                         <div className="flex flex-col gap-3">
@@ -118,12 +79,7 @@ export default function ResetPassword() {
                                         type={
                                             showPassword ? 'text' : 'password'
                                         }
-                                        value={resetPasswordData.password}
-                                        onChange={(e) =>
-                                            updateResetPasswordData({
-                                                password: e.target.value,
-                                            })
-                                        }
+                                        {...register('password')}
                                         className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                     />
                                     <button
@@ -142,7 +98,7 @@ export default function ResetPassword() {
                                 </div>
                                 {errors.password && (
                                     <p className="text-destructive text-sm mt-1">
-                                        {errors.password}
+                                        {errors.password.message}
                                     </p>
                                 )}
                                 <p className="text-xs text-muted-foreground mt-1">
@@ -172,14 +128,7 @@ export default function ResetPassword() {
                                                 ? 'text'
                                                 : 'password'
                                         }
-                                        value={
-                                            resetPasswordData.confirmPassword
-                                        }
-                                        onChange={(e) =>
-                                            updateResetPasswordData({
-                                                confirmPassword: e.target.value,
-                                            })
-                                        }
+                                        {...register('confirmPassword')}
                                         className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                         // required
                                     />
@@ -201,7 +150,7 @@ export default function ResetPassword() {
                                 </div>
                                 {errors.confirmPassword && (
                                     <p className="text-destructive text-sm mt-1">
-                                        {errors.confirmPassword}
+                                        {errors.confirmPassword.message}
                                     </p>
                                 )}
                             </div>

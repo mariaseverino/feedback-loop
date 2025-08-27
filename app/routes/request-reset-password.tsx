@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import type { Route } from './+types/request-reset-password';
 import { MessagesSquare } from 'lucide-react';
+import {
+    forgetPasswordFormSchema,
+    type ForgetPasswordFormData,
+} from '~/types/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -10,32 +16,18 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function RequestResetPassword() {
-    const [errors, setErrors] = useState<Record<string, string>>({});
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<ForgetPasswordFormData>({
+        resolver: zodResolver(forgetPasswordFormSchema),
+    });
 
-    const [email, setemail] = useState<string>('');
-
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const newErrors: Record<string, string> = {};
-
-        if (!email.trim()) {
-            newErrors.email = 'E-mail é obrigatório';
-        } else if (!validateEmail(email)) {
-            newErrors.email = 'E-mail inválido';
-        }
-
-        setErrors(newErrors);
-
-        if (Object.keys(newErrors).length === 0) {
-            console.log('login realizado:', email);
-            alert('login realizado');
-        }
-    };
+    function handleLoginForm(data: ForgetPasswordFormData) {
+        console.log('email enviado:', data);
+        alert('email enviado');
+    }
 
     return (
         <div className="flex min-h-screen flex-col justify-center items-center bg-[#F2F5FA]">
@@ -66,7 +58,7 @@ export default function RequestResetPassword() {
                     className="px-6 flex flex-col gap-4"
                 >
                     <form
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSubmit(handleLoginForm)}
                         className="flex flex-col gap-4"
                     >
                         <div className="flex flex-col gap-3">
@@ -83,12 +75,11 @@ export default function RequestResetPassword() {
                                 id="email"
                                 type="email"
                                 placeholder="m@email.com"
-                                value={email}
-                                onChange={(e) => setemail(e.target.value)}
+                                {...register('email')}
                             />
                             {errors.email && (
                                 <p className="text-destructive text-sm mt-1">
-                                    {errors.email}
+                                    {errors.email.message}
                                 </p>
                             )}
                         </div>
