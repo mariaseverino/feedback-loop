@@ -1,18 +1,53 @@
-import { Link, Outlet, useLocation } from 'react-router';
+import {
+    Link,
+    Outlet,
+    redirect,
+    useLoaderData,
+    useLocation,
+} from 'react-router';
 import { useEffect, useState } from 'react';
 import { DoorOpen, MessagesSquare, Moon, Sun } from 'lucide-react';
-import { useAuth } from '~/contexts/authContext';
 import { Can } from '~/hooks/permissions';
+import { commitSession, getSession } from '~/hooks/auth';
+import { useAuth } from '~/contexts/authContext';
+import { fetchCurrentUser } from '~/api/user';
+
+export async function loader({ request }: { request: Request }) {
+    const session = await getSession(request.headers.get('Cookie'));
+    let currentUser = session.get('currentUser') ?? null;
+
+    if (!currentUser) {
+        try {
+            const data = await fetchCurrentUser(
+                request.headers.get('Cookie') ?? ''
+            );
+            session.set('currentUser', data);
+            currentUser = data;
+            await commitSession(session);
+        } catch (err) {
+            throw redirect('/login');
+        }
+    }
+
+    return { currentUser };
+}
 
 export default function Layout() {
-    const { user } = useAuth();
+    const { currentUser } = useLoaderData<typeof loader>();
+    const { setCurrentUser } = useAuth();
+
+    useEffect(() => {
+        setCurrentUser(currentUser);
+    }, [currentUser, setCurrentUser]);
 
     return (
         <>
             <NavBar />
             <main
                 className={`lg:px-44 min-h-screen bg-[#F2F5FA] ${
-                    Can(user!.role, 'view_navbar') ? 'pt-28' : 'pt-16'
+                    currentUser && Can(currentUser.role, 'view_navbar')
+                        ? 'pt-28'
+                        : 'pt-16'
                 }`}
             >
                 <Outlet />
@@ -23,10 +58,10 @@ export default function Layout() {
 
 export function NavBar() {
     const [theme, setTheme] = useState('dark');
-    const { user } = useAuth();
+    const { currentUser } = useAuth();
     const location = useLocation();
 
-    const initials = user?.name
+    const initials = currentUser?.name
         .split(' ')
         .map((n) => n[0])
         .slice(0, 2)
@@ -59,7 +94,7 @@ export function NavBar() {
                     <div className="flex items-center gap-4 text-(--color-primary)">
                         <MessagesSquare className="size-8" />
                         <span className="font-bold text-xl md:block hidden">
-                            {user?.organization}
+                            {currentUser?.organization}
                         </span>
                     </div>
                     <div className="flex gap-3 md:gap-4 items-center">
@@ -81,10 +116,10 @@ export function NavBar() {
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="font-medium">
-                                        {user?.name}
+                                        {currentUser?.name}
                                     </span>
                                     <span className="text-xs text-gray-500">
-                                        {user?.email}
+                                        {currentUser?.email}
                                     </span>
                                 </div>
                             </div>
@@ -94,7 +129,7 @@ export function NavBar() {
                         </div>
                     </div>
                 </div>
-                {Can(user!.role, 'view_navbar') && (
+                {currentUser && Can(currentUser.role, 'view_navbar') && (
                     <nav className="flex">
                         <NavItem
                             to="dashboard"
@@ -112,15 +147,17 @@ export function NavBar() {
                             label="Feedbacks"
                             active={location.pathname === '/feedback'}
                         />
-                        {Can(user!.role, 'view_billing') && (
-                            <NavItem
-                                to="plano-&-pagamento"
-                                label="Plano & Pagamentos"
-                                active={
-                                    location.pathname === '/plano-&-pagamento'
-                                }
-                            />
-                        )}
+                        {currentUser &&
+                            Can(currentUser.role, 'view_billing') && (
+                                <NavItem
+                                    to="plano-&-pagamento"
+                                    label="Plano & Pagamentos"
+                                    active={
+                                        location.pathname ===
+                                        '/plano-&-pagamento'
+                                    }
+                                />
+                            )}
                         <NavItem
                             to="/ajuda"
                             label="Ajuda"

@@ -4,6 +4,7 @@ import { Eye, EyeOff, MessagesSquare } from 'lucide-react';
 import { loginFormSchema, type LoginData } from '~/types/auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useLogin } from '~/hooks/useAuth';
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -14,6 +15,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
+    const { mutate: login, errorMessage, isPending } = useLogin();
 
     const {
         register,
@@ -24,8 +26,7 @@ export default function Login() {
     });
 
     function handleLoginForm(data: LoginData) {
-        console.log('login realizado:', data);
-        alert('login realizado');
+        login(data);
     }
 
     return (
@@ -59,7 +60,8 @@ export default function Login() {
                 {/* </div> */}
                 <div className="px-6 flex flex-col gap-4">
                     {/* depois */}
-                    {/* <div className="grid grid-cols-2 gap-6">
+                    <>
+                        {/* <div className="grid grid-cols-2 gap-6">
                         <button
                             data-slot="button"
                             className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[&gt;svg]:px-3"
@@ -95,6 +97,7 @@ export default function Login() {
                             </span>
                         </div>
                     </div> */}
+                    </>
 
                     <form
                         onSubmit={handleSubmit(handleLoginForm)}
@@ -112,12 +115,12 @@ export default function Login() {
                                 data-slot="input"
                                 className="placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 id="email"
-                                type="email"
+                                type="text"
                                 placeholder="m@email.com"
                                 {...register('email')}
                             />
                             {errors.email && (
-                                <p className="text-destructive text-sm mt-1">
+                                <p className="text-destructive text-sm">
                                     {errors.email.message}
                                 </p>
                             )}
@@ -163,8 +166,13 @@ export default function Login() {
                                 </button>
                             </div>
                             {errors.password && (
-                                <p className="text-destructive text-sm mt-1">
+                                <p className="text-destructive text-sm">
                                     {errors.password.message}
+                                </p>
+                            )}
+                            {errorMessage && (
+                                <p className="text-destructive text-sm">
+                                    {errorMessage}
                                 </p>
                             )}
                         </div>
@@ -173,7 +181,7 @@ export default function Login() {
                             type="submit"
                             className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all bg-(--color-primary) text-white shadow-xs hover:bg-(--color-primary)/90 h-9 px-4 py-2 w-full mt-2"
                         >
-                            Entrar
+                            {isPending ? 'Entrando' : 'Entrar'}
                         </button>
                     </form>
                     <p className="text-center text-sm/6 text-gray-400">

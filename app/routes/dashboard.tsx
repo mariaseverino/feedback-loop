@@ -2,9 +2,10 @@ import { Send, TrendingDown, TrendingUp } from 'lucide-react';
 import { ChartBarLabel } from '~/components/chart-bar-label';
 import { ChartPieDonutText } from '~/components/chart-pie-donut-text';
 import type { Route } from './+types/dashboard';
-import { redirect } from 'react-router';
 import { getSession } from '~/hooks/auth';
+import type { User } from '~/hooks/useUser';
 import { Can } from '~/hooks/permissions';
+import { redirect } from 'react-router';
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -15,17 +16,12 @@ export function meta({}: Route.MetaArgs) {
 
 export async function loader({ request }: { request: Request }) {
     const session = await getSession(request.headers.get('Cookie'));
-    const user = session.get('user') ?? null;
+    const currentUser = (session.get('currentUser') as User) ?? null;
 
-    // if (!user || !user.permissions.includes('view_dashboard')) {
-    //     throw redirect('/feedback');
-    // }
-
-    if (!user || !Can(user.role, 'view_dashboard')) {
+    if (currentUser && Can(currentUser.role, 'view_dashboard')) {
         throw redirect('/feedback');
     }
-
-    return { user };
+    return;
 }
 
 export default function Dashboard() {

@@ -10,9 +10,15 @@ import {
 
 import type { Route } from './+types/root';
 import './app.css';
-import { AuthProvider } from './contexts/authContext';
-import { getSession } from './hooks/auth';
+// import { AuthProvider } from './contexts/authContext';
 import notFoundImg from '../app/assets/404-error.svg';
+import {
+    QueryClient,
+    QueryClientProvider,
+    useQuery,
+} from '@tanstack/react-query';
+import { AuthProvider } from './contexts/authContext';
+// import { fetchCurrentUser, useCurrentUser } from './hooks/useUser';
 
 export const links: Route.LinksFunction = () => [
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -48,20 +54,36 @@ export function Layout({ children }: { children: React.ReactNode }) {
     );
 }
 
-export async function loader({ request }: { request: Request }) {
-    const session = await getSession(request.headers.get('Cookie'));
-    const user = session.get('user') ?? null;
-
-    return { user };
+export interface User {
+    id: string | number;
+    name: string;
+    email: string;
+    role: 'tenant' | 'admin' | 'member';
+    organization: string;
 }
 
+// export async function loader({ request }: { request: Request }) {
+//     let rawUser = localStorage.getItem('user');
+
+//     let user: User | null = null;
+
+//     if (rawUser) {
+//         user = JSON.parse(rawUser) as User;
+//     }
+
+//     return user;
+// }
+
 export default function App() {
-    const { user } = useLoaderData<typeof loader>();
+    // const user = useLoaderData<typeof loader>();
+    const queryClient = new QueryClient();
 
     return (
-        <AuthProvider user={user}>
-            <Outlet />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+                <Outlet />
+            </AuthProvider>
+        </QueryClientProvider>
     );
 }
 

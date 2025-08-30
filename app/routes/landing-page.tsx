@@ -6,8 +6,6 @@ import CallToAction from '~/components/call-to-action';
 import FaqSection from '~/components/faq-section';
 import HeroSection from '~/components/hero-section';
 import Footer from '~/components/footer';
-import { commitSession, getSession } from '~/hooks/auth';
-import { redirect } from 'react-router';
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -16,23 +14,23 @@ export function meta({}: Route.MetaArgs) {
     ];
 }
 
-export async function action({ request }: { request: Request }) {
-    const session = await getSession(request.headers.get('Cookie'));
+// export async function action({ request }: { request: Request }) {
+//     const session = await getSession(request.headers.get('Cookie'));
 
-    session.set('user', {
-        id: '1',
-        name: 'Maria Severino',
-        email: 'maria@email.com',
-        role: 'tenant',
-        organization: 'Motiro',
-    });
+//     session.set('user', {
+//         id: '1',
+//         name: 'Maria Severino',
+//         email: 'maria@email.com',
+//         role: 'tenant',
+//         organization: 'Motiro',
+//     });
 
-    return redirect('/dashboard', {
-        headers: {
-            'Set-Cookie': await commitSession(session),
-        },
-    });
-}
+//     return redirect('/dashboard', {
+//         headers: {
+//             'Set-Cookie': await commitSession(session),
+//         },
+//     });
+// }
 
 export default function LandingPage() {
     return (
