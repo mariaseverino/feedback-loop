@@ -25,7 +25,7 @@ export async function loader({ request }: { request: Request }) {
             currentUser = data;
             await commitSession(session);
         } catch (err) {
-            throw redirect('/login');
+            return redirect('/login');
         }
     }
 

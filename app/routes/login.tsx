@@ -5,12 +5,29 @@ import { loginFormSchema, type LoginData } from '~/types/auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useLogin } from '~/hooks/useAuth';
+import { getSession } from '~/hooks/auth';
+import { redirect, type LoaderFunctionArgs } from 'react-router';
+import { fetchCurrentUser } from '~/api/user';
 
 export function meta({}: Route.MetaArgs) {
     return [
         { title: 'FeedbackLoop' },
         { name: 'description', content: 'Welcome to React Router!' },
     ];
+}
+
+export async function loader({ request }: LoaderFunctionArgs) {
+    const cookie = request.headers.get('Cookie') ?? '';
+    try {
+        const user = await fetchCurrentUser(cookie);
+
+        if (user) {
+            return redirect('/dashboard');
+        }
+        return null;
+    } catch {
+        return null;
+    }
 }
 
 export default function Login() {

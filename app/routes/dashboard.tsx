@@ -19,7 +19,7 @@ export async function loader({ request }: { request: Request }) {
     const currentUser = (session.get('currentUser') as User) ?? null;
 
     if (currentUser && Can(currentUser.role, 'view_dashboard')) {
-        throw redirect('/feedback');
+        return redirect('/feedback');
     }
     return;
 }
