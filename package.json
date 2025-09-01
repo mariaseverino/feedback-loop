@@ -3,10 +3,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "react-router build",
         "dev": "vite",
-        "start": "react-router-serve ./build/server/index.js",
-        "typecheck": "react-router typegen && tsc"
+        "start": "vite",
+        "build": "vite build && tsc"
     },
     "dependencies": {
         "@hookform/resolvers": "^5.2.1",
