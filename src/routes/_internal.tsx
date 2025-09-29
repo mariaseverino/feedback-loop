@@ -14,6 +14,7 @@ export const Route = createFileRoute('/_internal')({
     component: InternalLayout,
     beforeLoad: ({ context }) => {
         if (!context.auth.isAuthenticated) {
+            console.log({ internal: context });
             throw redirect({ to: '/login' });
         }
     },
@@ -26,10 +27,10 @@ export function InternalLayout() {
     const { currentUser } = useAuth();
 
     return (
-        <>
+        <div className="bg-[#F2F5FA] min-h-screen flex flex-col">
             <NavBar />
             <main
-                className={`lg:px-44 min-h-screen bg-[#F2F5FA] ${
+                className={`max-w-7xl m-auto ${
                     currentUser && Can(currentUser.role, 'view_navbar')
                         ? 'pt-28'
                         : 'pt-16'
@@ -37,7 +38,7 @@ export function InternalLayout() {
             >
                 <Outlet />
             </main>
-        </>
+        </div>
     );
 }
 
@@ -63,14 +64,13 @@ export function NavBar() {
 
     function handleLogout() {
         logout();
-        navigate({ to: '/login' });
     }
 
-    // useEffect(() => {
-    //     if (!isAuthenticated) {
-    //         navigate({ to: '/login' });
-    //     }
-    // }, [isAuthenticated, navigate]);
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate({ to: '/login' });
+        }
+    }, [isAuthenticated, navigate]);
 
     useEffect(() => {
         function getThemeFromStorage() {
@@ -79,7 +79,6 @@ export function NavBar() {
                 setTheme(storedTheme);
             }
         }
-
         getThemeFromStorage();
     }, []);
 
