@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import NavBar from './navbar';
 
 export default function HeroSection() {
@@ -22,13 +23,13 @@ export default function HeroSection() {
                             Começar agora
                         </a> */}
                         <div>
-                            <a
-                                href="/login"
+                            <Link
+                                to="/login"
                                 className="mt-8 rounded-xl bg-white px-6 py-4 text-sm sm:text-lg font-bold text-(--color-primary) hover:bg-white/90 transition-all duration-200 items-center inline-block shadow-md"
                             >
                                 Começar agora
                                 <span className="ml-2">→</span>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

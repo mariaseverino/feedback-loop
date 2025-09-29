@@ -13,6 +13,7 @@ interface IUser {
     email: string;
     role: 'tenant' | 'admin' | 'member';
     organization: string;
+    organizationId: string;
 }
 
 export interface AuthContextProps {
@@ -74,7 +75,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setCurrentUser(null);
         setAuthenticatedUser(null);
         setIsAuthenticated(false);
-        // navigate({ to: '/login' });
     }
 
     return (

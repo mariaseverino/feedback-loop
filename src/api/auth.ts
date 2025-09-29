@@ -9,6 +9,7 @@ export type UserAuthenticated = {
     email: string;
     role: 'tenant' | 'admin' | 'member';
     organization: string;
+    organizationId: string;
 };
 
 export async function authenticateWithPassword(data: LoginData) {

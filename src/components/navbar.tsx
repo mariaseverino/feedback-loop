@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { MessagesSquare } from 'lucide-react';
 
 export default function NavBar() {
@@ -48,24 +49,25 @@ export default function NavBar() {
 
                 {/* Ações (login / CTA) */}
                 <div className="hidden md:flex items-center space-x-4">
-                    <a
-                        href="/login"
+                    <Link
+                        to="/login"
                         className="px-4 py-2 font-bold text-white hover:bg-white/10 transition-all duration-200 hover:rounded-xl"
                     >
                         Entrar
-                    </a>
+                    </Link>
+
                     {/* <a
                         href="/register"
                         className="bg-white text-(--color-primary) px-4 py-2 rounded-full font-medium hover:bg-gray-100 transition"
                     >
                         Criar conta
                     </a> */}
-                    <a
-                        href="/register"
+                    <Link
+                        to="/register"
                         className="rounded-md bg-white px-4 py-2 text-sm font-bold text-(--color-primary) hover:bg-white/90 transition-all duration-200 shadow-md"
                     >
                         Criar conta
-                    </a>
+                    </Link>
                 </div>
             </div>
         </nav>
