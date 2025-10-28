@@ -1,20 +1,20 @@
 import { api } from './client';
 import type { AxiosError } from 'axios';
 
-interface KPI {
+export interface KPI {
     label: string;
     value: number;
     trending: 'UP' | 'DOWN';
     porcent: number;
 }
 
-interface Timeline {
+export interface Timeline {
     month: string;
     feedbacksIdentified: number;
     feedbacksAnonymous: number;
 }
 
-interface Stats {
+export interface Stats {
     feedbackKpis: KPI[];
     feedbackTimeline: Timeline[];
 }
@@ -50,9 +50,11 @@ export async function getNotAcceptedInvites(
             `/invites/${organizationId}/not-accepted`,
             { withCredentials: true }
         );
+        console.log(response.data);
         return response.data;
     } catch (err) {
         const error = err as AxiosError<{ message?: string }>;
+        // console.log({ message: error.response?.data });
         throw error;
     }
 }
@@ -62,6 +64,8 @@ export async function getDashboardData(orgId: string) {
         getStats(orgId),
         getNotAcceptedInvites(orgId),
     ]);
+
+    console.log(stats, invites);
 
     return { stats, invites };
 }

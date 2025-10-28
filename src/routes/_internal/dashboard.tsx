@@ -1,12 +1,28 @@
 import { Send, TrendingDown, TrendingUp } from 'lucide-react';
-import { createFileRoute, Link, redirect } from '@tanstack/react-router';
+import {
+    createFileRoute,
+    Link,
+    redirect,
+    useNavigate,
+} from '@tanstack/react-router';
 import { Can } from '~/hooks/permissions';
 import { ChartBarStacked } from '~/components/chart-bar-stacked';
 import { useQuery } from '@tanstack/react-query';
-import { getDashboardData, type NotAcceptedInvites } from '~/api/dashboard';
+import {
+    getDashboardData,
+    getNotAcceptedInvites,
+    getStats,
+    type KPI,
+    type NotAcceptedInvites,
+    type Timeline,
+} from '~/api/dashboard';
 import { useAuth } from '~/contexts/authContext';
 
 import empty from '../../assets/Empty-bro.svg';
+import type { AxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import type { Stats } from 'fs';
+import type { Invite } from '~/api/team';
 
 export const Route = createFileRoute('/_internal/dashboard')({
     component: Dashboard,
@@ -29,23 +45,50 @@ export const Route = createFileRoute('/_internal/dashboard')({
 });
 
 export default function Dashboard() {
-    const { currentUser } = useAuth();
+    const { currentUser, logout } = useAuth();
 
-    const { data } = useQuery({
-        queryKey: ['dashboard', currentUser?.organizationId],
-        queryFn: () => getDashboardData(currentUser?.organizationId!),
+    const navigate = useNavigate();
+
+    const {
+        data: stats = { feedbackKpis: [], feedbackTimeline: [] },
+        isError,
+        error,
+        isLoading,
+    } = useQuery({
+        queryKey: ['stats', currentUser?.organizationId],
+        queryFn: () => getStats(currentUser?.organizationId!),
     });
 
-    if (data?.stats.feedbackKpis[0].value === 0 && data.invites.length === 0) {
-        return <EmptyDashboard />;
+    if (isError) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        console.log(axiosError.status);
+        if (axiosError.response?.status === 401) {
+            logout();
+            navigate({ to: '/login' });
+        }
+    }
+
+    const { data: invites = [] } = useQuery({
+        queryKey: ['not_accepted_invites', currentUser?.organizationId],
+        queryFn: () => getNotAcceptedInvites(currentUser?.organizationId!),
+    });
+
+    if (isLoading) {
+        console.log('loading');
+    }
+
+    if (error) {
+        console.log('teste', error);
+        logout();
+        navigate({ to: '/login' });
     }
 
     return (
-        <div className="flex flex-col px-6 pt-14 gap-5">
+        <div className="flex flex-col px-6 py-14 gap-5 grow">
             <div>
                 <h1 className="text-4xl font-bold pb-6">Dashboard</h1>
-                <div className="grid lg:grid-cols-4 gap-5">
-                    {data?.stats.feedbackKpis.map(
+                <div className="grid lg:grid-cols-4 gap-5 md:grid-cols-2">
+                    {stats.feedbackKpis.map(
                         ({ label, value, trending, porcent }) => (
                             <Card
                                 key={value}
@@ -58,22 +101,22 @@ export default function Dashboard() {
                     )}
                 </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 grow">
                 <ChartBarStacked
                     className="lg:col-span-3"
-                    chartData={data?.stats.feedbackTimeline!}
+                    chartData={stats.feedbackTimeline}
                 />
 
                 <PendentMembers
                     className="lg:col-span-2"
-                    notAcceptedInvites={data?.invites!}
+                    notAcceptedInvites={invites}
                 />
             </div>
         </div>
     );
 }
 
-function PendentMembers({
+export function PendentMembers({
     className,
     notAcceptedInvites,
 }: {
@@ -87,15 +130,15 @@ function PendentMembers({
     const currentMembers = notAcceptedInvites.slice(0, rowsPerPage);
 
     return (
-        <div className={`${className} border-0 rounded-3xl`}>
-            <div className="bg-white rounded-3xl flex flex-col shadow-sm flex-1 pb-2">
+        <div className={`${className} border-0 rounded-3xl flex`}>
+            <div className="bg-white rounded-3xl flex flex-col shadow-sm pb-2 grow">
                 <div className="flex justify-between px-6 py-5">
                     <h2 className="leading-none font-semibold text-gray-800">
                         Membros Pendentes
                     </h2>
                 </div>
 
-                <div className="h-[27rem] min-w-full text-sm text-left px-6 overflow-y-auto">
+                <div className="text-sm text-left px-6 overflow-y-auto">
                     <ul>
                         {currentMembers.map(({ email, id, token }) => (
                             <div
@@ -155,10 +198,10 @@ function TrendingMessage({ trending }: { trending: 'UP' | 'DOWN' | 'N/A' }) {
         return (
             <div className="mt-2">
                 <div className="flex items-center gap-2 font-medium text-green-600">
-                    Tendência de alta este mês <TrendingUp size={16} />
+                    Tendência de alta <TrendingUp size={16} />
                 </div>
                 <p className="text-xs text-(--color-muted-text)">
-                    Comparado aos últimos 6 meses
+                    Comparado ao último mês
                 </p>
             </div>
         );
@@ -166,10 +209,10 @@ function TrendingMessage({ trending }: { trending: 'UP' | 'DOWN' | 'N/A' }) {
         return (
             <div className="mt-2">
                 <div className="flex items-center gap-2 font-medium text-red-600">
-                    Tendência de queda este mês <TrendingDown size={16} />
+                    Tendência de queda <TrendingDown size={16} />
                 </div>
                 <p className="text-xs text-(--color-muted-text)">
-                    Comparado aos últimos 6 meses
+                    Comparado ao último mês
                 </p>
             </div>
         );

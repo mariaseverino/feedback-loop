@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { redirect, useNavigate } from '@tanstack/react-router';
 
-interface IUser {
+export interface IUser {
     id: string | number;
     name: string;
     email: string;

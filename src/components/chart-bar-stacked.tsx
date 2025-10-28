@@ -62,7 +62,7 @@ export function ChartBarStacked({
             <CardContent>
                 <ChartContainer
                     config={chartConfig}
-                    className="aspect-auto h-[380px] w-full"
+                    className="aspect-auto h-[330px] w-full"
                 >
                     <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />

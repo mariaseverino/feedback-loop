@@ -30,7 +30,7 @@ export function InternalLayout() {
         <div className="bg-[#F2F5FA] min-h-screen flex flex-col">
             <NavBar />
             <main
-                className={`max-w-7xl m-auto ${
+                className={`lg:w-7xl flex m-auto grow g-red-500 w-screen ${
                     currentUser && Can(currentUser.role, 'view_navbar')
                         ? 'pt-28'
                         : 'pt-16'
@@ -67,20 +67,21 @@ export function NavBar() {
     }
 
     useEffect(() => {
+        console.log(isAuthenticated);
         if (!isAuthenticated) {
             navigate({ to: '/login' });
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated]);
 
-    useEffect(() => {
-        function getThemeFromStorage() {
-            const storedTheme = localStorage.getItem('theme');
-            if (storedTheme) {
-                setTheme(storedTheme);
-            }
-        }
-        getThemeFromStorage();
-    }, []);
+    // useEffect(() => {
+    //     function getThemeFromStorage() {
+    //         const storedTheme = localStorage.getItem('theme');
+    //         if (storedTheme) {
+    //             setTheme(storedTheme);
+    //         }
+    //     }
+    //     getThemeFromStorage();
+    // }, []);
 
     return (
         <header className="bg-white fixed w-screen shadow-sm z-50">
